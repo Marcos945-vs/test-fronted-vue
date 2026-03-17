@@ -1,0 +1,28 @@
+// For checkbox & radios
+.v-selection-control__input>.v-icon.mdi-checkbox-blank-outline,
+.v-selection-control__input>.v-icon.mdi-radiobox-blank {
+    color: rgb(var(--v-theme-inputBorder));
+    opacity: 1;
+}
+
+
+.selection-input {
+    .v-input {
+        background-color: rgb(var(--v-theme-lightsecondary));
+        border-radius: $border-radius-root;
+
+        .v-field__input {
+            font-size: 15px !important;
+            color: rgb(var(--v-theme-textPrimary));
+            opacity: 0.6;
+            padding-top: 0;
+            min-height: 40px;
+            padding-bottom: 0;
+
+        }
+
+        .v-field__outline {
+            color: transparent;
+        }
+    }
+}

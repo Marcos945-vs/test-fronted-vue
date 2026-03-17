@@ -1,0 +1,252 @@
+/*This is for the logo*/
+.leftSidebar {
+    .mini-icon {
+        display: none;
+    }
+
+    .mini-text {
+        display: block;
+    }
+
+    .profile-name {
+        background: rgba(0, 0, 0, 0.5);
+
+        h5 {
+            text-overflow: ellipsis;
+            white-space: nowrap;
+            overflow: hidden;
+        }
+    }
+
+    .v-list--density-default .v-list-subheader {
+        padding-inline-start: 0 !important;
+    }
+    .iconClass
+    {   
+        &.innericon{
+            margin-inline-end: 10px;
+        }
+        
+    }
+
+}
+
+.verticalLayout {
+    .logo {
+        @media screen and (max-width:1024px) {
+            width: auto;
+        }
+    }
+}
+
+/*This is for the Vertical sidebar*/
+.scrollnavbar {
+    height: calc(100vh - 280px);
+
+    .userbottom {
+        position: fixed;
+        bottom: 0px;
+        width: 100%;
+    }
+
+    .smallCap {
+        padding: 3px 12px 8px 0px !important;
+        font-weight: 700;
+        margin-top: 24px;
+        color: rgb(var(--v-theme-textPrimary));
+
+        &:first-child {
+            margin-top: 0 !important;
+        }
+    }
+
+    /*General Menu css*/
+    .v-list-group__items .v-list-item,
+    .v-list-item {
+        border-radius: $border-radius-root;
+        padding-inline-start: calc(12px + var(--indent-padding) / 10) !important;
+
+        margin: 0 0 2px;
+
+        &:hover {
+
+            background: rgb(var(--v-theme-lightsecondary));
+
+            color: rgb(var(--v-theme-secondary));
+        }
+
+        .v-list-item__prepend {
+            margin-inline-end: 13px;
+        }
+
+        .v-list-item__append {
+            font-size: 0.875rem;
+
+            .v-icon {
+                margin-inline-start: 13px;
+            }
+        }
+
+        .v-list-item-title {
+            font-size: 1rem;
+        }
+    }
+
+    /*This is for the dropdown*/
+    .v-list {
+        color: rgb(var(--v-theme-textPrimary));
+
+        >.v-list-item.v-list-item--active,
+        .v-list-item--active>.v-list-item__overlay {
+            background: rgb(var(--v-theme-secondary));
+            color: white;
+        }
+
+        >.v-list-group {
+            position: relative;
+
+            >.v-list-item--active,
+            >.v-list-item--active:hover {
+                background: rgb(var(--v-theme-secondary));
+                color: white;
+            }
+
+            .v-list-group__items .v-list-item.v-list-item--active,
+            .v-list-group__items .v-list-item.v-list-item--active>.v-list-item__overlay {
+                background: transparent;
+                color: rgb(var(--v-theme-secondary));
+            }
+        }
+
+        .v-list-group--open{
+            .mdi-chevron-right{
+                transform: rotate(90deg);
+            }
+        }
+
+
+
+    }
+}
+
+.v-navigation-drawer--rail {
+
+    .scrollnavbar .v-list .v-list-group__items,
+    .hide-menu {
+        opacity: 1;
+    }
+
+    .leftPadding {
+        margin-left: 0px;
+    }
+}
+
+@media only screen and (min-width: 1170px) {
+    .mini-sidebar {
+        .logo {
+            width: 35px;
+            overflow: hidden;
+            padding-left: 0;
+        }
+
+        .profile-logout {
+            opacity: 0;
+            width: 0;
+        }
+
+        .leftSidebar .v-list--density-default .v-list-subheader {
+            padding-inline-start: 12px !important;
+        }
+
+        .scrollnavbar {
+            .smallCap {
+                padding: 3px 12px 12px 12px !important;
+            }
+        }
+
+        .mini-icon {
+            display: block;
+        }
+
+        .sidebarchip.hide-menu {
+            opacity: 0;
+        }
+
+        .mini-text {
+            display: none;
+        }
+
+        .v-list {
+            padding: 22px !important;
+        }
+
+      
+
+        .userbottom{
+            opacity: 0;
+        }
+        .scrollnavbar {
+            height: calc(100vh - 100px);
+        }
+
+        .leftSidebar:hover {
+            box-shadow: $box-shadow !important;
+
+            .mini-icon {
+                display: none;
+            }
+
+            .sidebarchip.hide-menu {
+                opacity: 1;
+            }
+
+            .mini-text {
+                display: block;
+            }
+
+            .profile-logout {
+                opacity: 1;
+                width: auto;
+            }
+
+            .scrollnavbar {
+                .smallCap {
+                    padding: 3px 12px 12px 0px !important;
+                }
+            }
+
+            .v-list-group__items {
+                .iconClass {
+                    position: relative;
+                    left: 0px;
+                }
+            }
+
+            .v-list--density-default .v-list-subheader {
+                padding-inline-start: 0px !important;
+            }
+            .userbottom{
+                opacity: 1;
+            }
+            .scrollnavbar {
+                height: calc(100vh - 280px);
+            }
+        }
+
+        .v-navigation-drawer--expand-on-hover:hover {
+            .logo {
+                width: 100%;
+            }
+
+            .v-list .v-list-group__items,
+            .hide-menu {
+                opacity: 1;
+            }
+        }
+    }
+}
+
+// scrollbar 
+.ps__rail-y {
+    z-index: 9;
+}

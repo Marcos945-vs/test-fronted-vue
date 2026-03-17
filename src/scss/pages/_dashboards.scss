@@ -1,0 +1,72 @@
+.month-table {
+    &.custom-px-0 {
+        thead {
+            tr {
+                th:first-child {
+                    padding-left: 0 !important;
+                }
+
+                th:last-child {
+                    padding-right: 0 !important;
+                }
+            }
+        }
+
+        tr.month-item {
+            td:first-child {
+                padding-left: 0 !important;
+            }
+
+            td:last-child {
+                padding-right: 0 !important;
+            }
+        }
+    }
+
+    tr.month-item {
+        td {
+            padding-top: 16px !important;
+            padding-bottom: 16px !important;
+        }
+
+        &:hover {
+            background: transparent !important;
+        }
+    }
+}
+
+.recent-transaction {
+    .line {
+        width: 2px;
+        height: 38px;
+    }
+
+    .circle-dot {
+        width: 12px;
+        height: 12px;
+        border-radius: 50px;
+        background-color: transparent;
+
+    }
+}
+
+
+.chip-label {
+    width: 80px;
+    justify-content: center;
+}
+
+.performence-tab{
+    .v-btn
+    {
+        &.v-tab-item--selected.v-tab--selected{
+            background-color: rgb(var(--v-theme-secondary));
+            color: white;
+            border-radius: $border-radius-root;
+
+            .v-tab__slider{
+                opacity: 0;
+            }
+        }
+    }
+}

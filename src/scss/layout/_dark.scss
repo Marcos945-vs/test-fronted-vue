@@ -1,0 +1,23 @@
+// theme : dark
+div[class*='v-theme--DARK_'] {
+    .smallCap {
+        color: rgba(var(--v-theme-textPrimary),0.5);
+    }
+
+    .elevation-10 {
+        box-shadow: rgb(145 158 171 / 30%) 0px 0px 2px 0px, rgb(145 158 171 / 2%) 0px 12px 24px -4px !important;
+    }
+
+    .customTab {
+        .v-btn {
+            &.v-tab-item--selected {
+                background-color: rgb(var(--v-theme-lightsecondary)) !important;
+                 color: #fff;
+                .icon {
+                    background-color: rgb(var(--v-theme-secondary)) !important;
+                    color: #fff !important;
+                }
+            }
+        }
+    }
+}
