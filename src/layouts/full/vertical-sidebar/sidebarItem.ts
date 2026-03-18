@@ -29,18 +29,16 @@ import {
  export const sidebarItem = [
     { header: 'Home' },
     {
-            title: 'Project',
-            icon: BrandChromeIcon,
-            to: '#',
-            children: [
-                {
-                    title: 'List Project',
-                    icon: CircleIcon,
-                    to: '/TableProject'
-                }
-            ]
-        },
-        {
+            title: 'List Project',
+            icon: CircleIcon,
+            to: '/TableProject'
+    },
+    {
+            title: 'List Module',
+            icon: CircleIcon,
+            to: '/TableModule'
+    },
+    {
             title: 'Artifact',
             icon: BrandChromeIcon,
             to: '#',
@@ -57,24 +55,7 @@ import {
                 }
             ]
         },
-        {
-            title: 'Module',
-            icon: BrandChromeIcon,
-            to: '#',
-            children: [
-                {
-                    title: 'List Module',
-                    icon: CircleIcon,
-                    to: '/TableModule'
-                },
-                {
-                    title: 'New Module',
-                    icon: CircleIcon,
-                    to: '/FormModule'
-                }
-            ]
-        },
-    
+        
 ];
 
 export const sidebarArtifact = [

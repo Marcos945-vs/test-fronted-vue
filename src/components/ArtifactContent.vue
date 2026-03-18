@@ -12,7 +12,7 @@ const filteredArtifacts = computed(() =>
 </script>
 
 <template>
-  <h2 class="mb-4">{{ selectedStore.artifact }}</h2>
+  <h2 class="text-h6 mb-4">{{ selectedStore.artifact }}</h2>
 
   <v-row
     v-for="item in filteredArtifacts"

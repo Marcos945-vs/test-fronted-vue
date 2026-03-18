@@ -49,6 +49,7 @@ const selectedStore = useSelectedStore();
                     <NavGroup :item="item" v-if="item.header" :key="item.title" />
                     <!---If Has Child -->
                     <NavCollapse class="leftPadding" :item="item" :level="0" v-else-if="item.children" />
+                    <NavItem :item="item" v-else class="leftPadding" />
                 </template>
             </v-list>
             <v-list class="py-4 pa-6">

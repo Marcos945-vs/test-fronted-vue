@@ -1,79 +1,161 @@
 <script setup>
-import { ref } from 'vue';
-import axios from 'axios';
-
-import { useRouter } from 'vue-router' 
-import { statusModule, urlModule } from '@/enum/enum.js'
+import { ref } from 'vue'
+import { useRouter } from 'vue-router'
 
 const router = useRouter()
 
-const name = ref('')
-const project_id = ref('')
-const domain = ref('')
-const status = ref('')
+// Module fields
+const objective = ref('')
+const inputs = ref([])
+const dataStructure = ref('')
+const logicRules = ref('')
+const outputs = ref([])
+const responsibility = ref('')
+const failureScenarios = ref('')
+const auditTrailRequirements = ref('')
+const dependencies = ref([])
+const versionNote = ref('')
 
-const handleSubmit = async () => {
-     try { 
-        const response = await axios.post(urlModule, 
-        { 
-            name: name.value,
-            project_id: project_id.value, 
-            domain: domain.value,
-            status: status.value, 
-        }) 
-        console.log('Modulo creado:', response.data) 
-        router.push('/FormProject')
-    } catch (error) 
-    { 
-        console.error('Error al crear modulo:', error.response?.data || error.message) 
-    } 
+// Validation rules
+const requiredRule = (v) => !!v || 'This field is required'
+const minLengthRule = (min) => (v) =>
+  (v && v.length >= min) || `Must have at least ${min} characters`
+
+const formRef = ref(null)
+
+// Module validation rule
+const canValidate = () => {
+  return (
+    objective.value.trim() !== '' &&
+    inputs.value.length > 0 &&
+    outputs.value.length > 0 &&
+    responsibility.value.trim() !== ''
+  )
 }
 
+const handleSubmit = () => {
+  const isValid = formRef.value?.validate()
+  if (!isValid) {
+    console.log('Invalid form')
+    return
+  }
+  if (!canValidate()) {
+    console.log('Module does not meet validation rules')
+    return
+  }
+  console.log('Module created and validated')
+  router.back()
+}
 </script>
 
 <template>
-    <v-row >
-    <v-col cols="12">
-            <v-label class="font-weight-medium mb-2">Name</v-label>
-            <VTextField  
-            type="text" 
-            placeholder="Jane Doe" 
-            hide-details 
-            v-model="name"
-            ></VTextField>
-        </v-col>
-        <v-col cols="12">
-            <v-label class="font-weight-medium mb-2">Proyect ID</v-label>
-            <VTextField  
-            type="text" 
-            placeholder="123456" 
-            hide-details 
-            v-model="project_id"
-            ></VTextField>
-        </v-col>
-        <v-col cols="12">
-            <v-label class="font-weight-medium mb-2">Domain</v-label>
-            <VTextField  
-            type="text" 
-            placeholder="123456" 
-            hide-details 
-            v-model="domain"
-            ></VTextField>
-        </v-col>
-        <v-col cols="12">
-            <v-label class="font-weight-medium mb-2">Status</v-label>
-                <v-select
-                :items="statusModule"
-                v-model="status"
-                label="Select Status"
-                hide-details
-            />
-        </v-col>
-        <v-col cols="2">
-            <v-btn @click="handleSubmit" color="primary" flat>Create Module</v-btn>
-        </v-col>
-        <v-col cols="1">
-            <v-btn @click="router.push('/FormProject')" color="primary" flat>Cancel</v-btn>
-        </v-col>
+  <v-form ref="formRef">
+    <v-row>
+      <v-col cols="12">
+        <v-label class="font-weight-medium mb-2">Objective</v-label>
+        <VTextField
+          v-model="objective"
+          placeholder="Enter module objective"
+          :rules="[requiredRule, minLengthRule(5)]"
+          hide-details="auto"
+        />
+      </v-col>
+
+      <v-col cols="12">
+        <v-label class="font-weight-medium mb-2">Inputs</v-label>
+        <VTextField
+          v-model="inputs"
+          placeholder='Example: input1, input2'
+          :rules="[requiredRule]"
+          hide-details="auto"
+        />
+      </v-col>
+
+      <v-col cols="12">
+        <v-label class="font-weight-medium mb-2">Data Structure</v-label>
+        <VTextField
+          v-model="dataStructure"
+          placeholder="Describe data structure or JSON"
+          hide-details="auto"
+        />
+      </v-col>
+
+      <v-col cols="12">
+        <v-label class="font-weight-medium mb-2">Logic Rules</v-label>
+        <VTextField
+          v-model="logicRules"
+          placeholder="Enter business logic rules"
+          hide-details="auto"
+        />
+      </v-col>
+
+      <v-col cols="12">
+        <v-label class="font-weight-medium mb-2">Outputs</v-label>
+        <VTextField
+          v-model="outputs"
+          placeholder='Example: output1, output2'
+          :rules="[requiredRule]"
+          hide-details="auto"
+        />
+      </v-col>
+
+      <v-col cols="12">
+        <v-label class="font-weight-medium mb-2">Responsibility</v-label>
+        <VTextField
+          v-model="responsibility"
+          placeholder="Enter responsible team or owner"
+          :rules="[requiredRule]"
+          hide-details="auto"
+        />
+      </v-col>
+
+      <v-col cols="12">
+        <v-label class="font-weight-medium mb-2">Failure Scenarios</v-label>
+        <VTextField
+          v-model="failureScenarios"
+          placeholder="Possible failure scenarios"
+          hide-details="auto"
+        />
+      </v-col>
+
+      <v-col cols="12">
+        <v-label class="font-weight-medium mb-2">Audit Trail Requirements</v-label>
+        <VTextField
+          v-model="auditTrailRequirements"
+          placeholder="Audit trail requirements"
+          hide-details="auto"
+        />
+      </v-col>
+
+      <v-col cols="12">
+        <v-label class="font-weight-medium mb-2">Dependencies</v-label>
+        <VTextField
+          v-model="dependencies"
+          placeholder='Example: moduleA, moduleB'
+          hide-details="auto"
+        />
+      </v-col>
+
+      <v-col cols="12">
+        <v-label class="font-weight-medium mb-2">Version Note</v-label>
+        <VTextField
+          v-model="versionNote"
+          placeholder="Enter version note"
+          hide-details="auto"
+        />
+      </v-col>
+
+      <v-card-actions>
+        <v-btn
+          @click="handleSubmit"
+          color="primary"
+          flat
+          :disabled="!canValidate()"
+        >
+          Validate Module
+        </v-btn>
+        <v-btn @click="$router.back()">Back</v-btn>
+      </v-card-actions>
     </v-row>
+  </v-form>
 </template>

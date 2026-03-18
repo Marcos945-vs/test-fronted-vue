@@ -15,13 +15,16 @@ const ArtifactHeaders = [
     {title: 'Content Json', align: 'start', key: 'content_json'},
     { title: 'Actions', align: 'center', key: 'actions' }
 ]
+
 const ModuleHeaders = [
-    { title: 'Name', align: 'start', key: 'name' },
-    { title: 'Project Name', align: 'start', key: 'project' },
-    { title: 'Post', align: 'start', key: 'post' },
-    { title: 'Status', align: 'start', key: 'status' },
-    { title: 'Budget', align: 'end', key: 'budget' },
+  { title: 'ID', align: 'start', key: 'id' },
+  { title: 'Objective', align: 'start', key: 'objective' },
+  { title: 'Responsibility', align: 'start', key: 'responsibility' },
+  { title: 'Version Note', align: 'start', key: 'version_note' },
+  { title: 'Actions', align: 'center', key: 'actions', sortable: false }
 ]
+
+
 const AuditEventHeaders = [
     { title: 'Actor User ID', align: 'start', key: 'actor_user_id' },
     { title: 'Entity Type', align: 'start', key: 'entity_type' },
@@ -139,22 +142,138 @@ const ArtifactItems = [
   }
 ]
 
-const ModuleItem = {
-  project_id: "P-010",
-  domain: "Payments",
-  name: "PaymentGateway",
-  status: "draft",
-  objective: "Procesar pagos en línea de manera segura",
-  inputs: ["credit_card_info", "user_id"],
-  data_structure: "{ card_number: string, expiry: date, cvv: string }",
-  logic_rules: "Validar tarjeta, procesar pago, registrar transacción",
-  outputs: ["transaction_id", "payment_status"],
-  responsibility: "Equipo de Finanzas",
-  failure_scenarios: "Tarjeta inválida, fondos insuficientes, error de red",
-  audit_trail_requirements: "Registrar cada intento de pago con resultado",
-  dependencies: ["Module_Auth", "Module_UserProfile"],
-  version_note: "v1.0 inicial"
-}
+const ModulesItems = [
+  {
+    id: 1,
+    objective: "User authentication",
+    inputs: ["username", "password"],
+    data_structure: "User table with hashed passwords",
+    logic_rules: "Validate credentials and generate token",
+    outputs: ["auth_token"],
+    responsibility: "Security team",
+    failure_scenarios: "Invalid credentials, locked account",
+    audit_trail_requirements: "Log login attempts with timestamp",
+    dependencies: [2],
+    version_note: "v1.0 initial release"
+  },
+  {
+    id: 2,
+    objective: "Payment processing",
+    inputs: ["card_number", "amount", "currency"],
+    data_structure: "Transaction table",
+    logic_rules: "Authorize payment if card is valid",
+    outputs: ["payment_confirmation", "receipt"],
+    responsibility: "Finance team",
+    failure_scenarios: "Card declined, network error",
+    audit_trail_requirements: "Store transaction ID, user ID",
+    dependencies: [1],
+    version_note: "v1.1 added currency support"
+  },
+  {
+    id: 3,
+    objective: "Email notifications",
+    inputs: ["recipient_email", "message"],
+    data_structure: "Queue system",
+    logic_rules: "Send email asynchronously",
+    outputs: ["delivery_status"],
+    responsibility: "Communication service",
+    failure_scenarios: "SMTP error, invalid email",
+    audit_trail_requirements: "Log email ID and status",
+    dependencies: [],
+    version_note: "v1.0 basic notifications"
+  },
+  {
+    id: 4,
+    objective: "Report generation",
+    inputs: ["date_range", "filters"],
+    data_structure: "Report schema",
+    logic_rules: "Aggregate data by filters",
+    outputs: ["PDF_report"],
+    responsibility: "Analytics team",
+    failure_scenarios: "Missing data, timeout",
+    audit_trail_requirements: "Log report parameters",
+    dependencies: [2],
+    version_note: "v2.0 optimized queries"
+  },
+  {
+    id: 5,
+    objective: "Inventory management",
+    inputs: ["product_id", "quantity"],
+    data_structure: "Inventory table",
+    logic_rules: "Update stock levels",
+    outputs: ["updated_inventory"],
+    responsibility: "Operations team",
+    failure_scenarios: "Negative stock, invalid product",
+    audit_trail_requirements: "Log changes with user ID",
+    dependencies: [],
+    version_note: "v1.0 initial setup"
+  },
+  {
+    id: 6,
+    objective: "User profile update",
+    inputs: ["user_id", "profile_data"],
+    data_structure: "Profile table",
+    logic_rules: "Validate and update fields",
+    outputs: ["update_status"],
+    responsibility: "User service",
+    failure_scenarios: "Invalid data, permission denied",
+    audit_trail_requirements: "Log changes with timestamp",
+    dependencies: [1],
+    version_note: "v1.2 added phone field"
+  },
+  {
+    id: 7,
+    objective: "File upload",
+    inputs: ["file", "metadata"],
+    data_structure: "File storage system",
+    logic_rules: "Check file type and size",
+    outputs: ["file_url"],
+    responsibility: "Storage service",
+    failure_scenarios: "File too large, unsupported type",
+    audit_trail_requirements: "Log file ID and uploader",
+    dependencies: [],
+    version_note: "v1.0 basic upload"
+  },
+  {
+    id: 8,
+    objective: "Data backup",
+    inputs: ["database_snapshot"],
+    data_structure: "Backup archive",
+    logic_rules: "Compress and store snapshot",
+    outputs: ["backup_id"],
+    responsibility: "IT team",
+    failure_scenarios: "Storage full, corrupted snapshot",
+    audit_trail_requirements: "Log backup ID and date",
+    dependencies: [],
+    version_note: "v1.0 nightly backup"
+  },
+  {
+    id: 9,
+    objective: "Search functionality",
+    inputs: ["query_string"],
+    data_structure: "Indexed documents",
+    logic_rules: "Match query against index",
+    outputs: ["search_results"],
+    responsibility: "Search service",
+    failure_scenarios: "No results, index outdated",
+    audit_trail_requirements: "Log queries for analytics",
+    dependencies: [],
+    version_note: "v1.0 basic search"
+  },
+  {
+    id: 10,
+    objective: "Access control",
+    inputs: ["user_role", "resource"],
+    data_structure: "ACL table",
+    logic_rules: "Check permissions",
+    outputs: ["access_granted"],
+    responsibility: "Security team",
+    failure_scenarios: "Unauthorized access attempt",
+    audit_trail_requirements: "Log access attempts",
+    dependencies: [1],
+    version_note: "v1.0 role-based access"
+  }
+]
 
 
 const AuditEvents = [
@@ -251,4 +370,4 @@ const AuditEvents = [
 ];
 
 
-export {ProjectHeaders, ArtifactHeaders, ModuleHeaders, ProjectItems, ArtifactItems, ModuleItem, AuditEvents, AuditEventHeaders};
+export {ProjectHeaders, ArtifactHeaders, ModuleHeaders, ProjectItems, ArtifactItems, ModulesItems, AuditEvents, AuditEventHeaders};

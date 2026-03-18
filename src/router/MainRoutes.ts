@@ -49,6 +49,11 @@ const MainRoutes = {
             component: () => import('@/views/DetailsProject.vue')
         },
         {
+            name: 'DetailsModule',
+            path: '/DetailsModule/:id',
+            component: () => import('@/views/DetailsModule.vue')
+        },
+        {
             name: 'Audit',
             path: '/Audit',
             component: () => import('@/views/Audit.vue')

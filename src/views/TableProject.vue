@@ -104,13 +104,11 @@ function saveEdit() {
   if (index !== -1) {
     projects.value[index] = { ...selectedProject.value };
   }
-  auditStore.addEvent(`Project edited: ${selectedProject.value.name}`, 'low');
   editDialog.value = false;
 }
 
 function deleteProject(item) {
   projects.value = projects.value.filter(p => p.name !== item.name);
-  auditStore.addEvent(`Project deleted: ${item.name}`, 'high');
 }
 
 const goToDetail = (item) => {
