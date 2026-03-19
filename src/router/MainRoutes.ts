@@ -60,7 +60,15 @@ const MainRoutes = {
         {
             name: 'DetailsModule',
             path: '/DetailsModule/:id',
-            component: () => import('@/views/DetailsModule.vue')
+            component: () => import('@/views/DetailsModule.vue'),
+            beforeEnter: () => {
+                const selectedStore = useSelectedStore();
+                if (!selectedStore.module) {
+                // redirige si no hay modulo cargado
+                return '/TableModule';
+                }
+                return true; // permite continuar
+            }
         },
         {
             name: 'Audit',

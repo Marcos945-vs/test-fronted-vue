@@ -1,12 +1,13 @@
 <script setup>
 import Icon from '../Icon.vue';
 import { useSelectedStore } from '@/stores/selectedItems';
+import { ModulesItems } from '@/_mockApis/dataTable';
 
 const selectedStore = useSelectedStore()
 const props = defineProps({ item: Object, level: Number });
 
 const handleClick = () => {
-    selectedStore.selectModule(props.item.title)
+    selectedStore.selectModule(ModulesItems.find(m => m.objective === props.item.title).id)
 }
 </script>
 
