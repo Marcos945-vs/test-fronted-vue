@@ -15,6 +15,18 @@ const completed_at = ref('')
 const content_json = ref({})
 
 const dialog = ref(false)
+const error = ref('')
+
+const requiredRule = (v) => !!v || 'Este campo es obligatorio';
+const dateRule = (v) => {
+  if (!v) return 'La fecha es obligatoria';
+  // formato YYYY-MM-DD
+  return /^\d{4}-\d{2}-\d{2}$/.test(v) || 'Formato de fecha inválido (YYYY-MM-DD)';
+};
+const idRule = (v) => {
+  if (!v) return 'El ID es obligatorio';
+  return /^U-\d{3}$/.test(v) || 'Formato inválido (ejemplo: U-001)';
+};
 
 const handleSubmit = async () => {
      try { 
@@ -41,7 +53,7 @@ const saveContentJson = () => {
 }
 
 const openDialog = () => {
-  // reinicia el objeto según el type seleccionado
+    if(type.value) {
   switch (type) {
     case "Strategic alignment":
       content_json.value = {
@@ -63,6 +75,19 @@ const openDialog = () => {
         domains: [{ name: "", objective: "", owner_user_id: "" }]
       };
       break;
+      case "Module Matrix":
+        content_json.value = {
+          modules_overview: [
+            { name: "", domain: "", priority: "", phase: "" }
+          ]
+        };
+        break;
+      case "Module Engineering":
+        content_json.value = {
+          modules_overview: [
+            { name: "", domain: "", priority: "", phase: "" }
+          ]
+        };
     case "System Architecture":
       content_json.value = {
         auth_model: "",
@@ -82,6 +107,9 @@ const openDialog = () => {
       content_json.value = {};
   }
   dialog.value = true;
+  } else {
+    error.value = "Please select a type before adding content JSON.";
+  }
 }
 
 </script>
@@ -95,6 +123,7 @@ const openDialog = () => {
             placeholder="123456" 
             hide-details 
             v-model="project_id"
+            :rules="[requiredRule]"
             ></VTextField>
         </v-col>
         <v-col cols="12">
@@ -104,6 +133,7 @@ const openDialog = () => {
                 v-model="type"
                 label="Select Type"
                 hide-details
+                :rules="[requiredRule]"
             />
         </v-col>
         <v-col cols="12">
@@ -113,6 +143,7 @@ const openDialog = () => {
                 v-model="status"
                 label="Select Status"
                 hide-details
+                :rules="[requiredRule]"
             />
         </v-col>
         <v-col cols="12">
@@ -122,6 +153,8 @@ const openDialog = () => {
             placeholder="U-001" 
             hide-details
             v-model="owner_user_id"
+            :rules="[idRule]"
+            
             ></VTextField>
         </v-col>
         <v-col cols="12">
@@ -131,6 +164,7 @@ const openDialog = () => {
             placeholder="2026-03-03" 
             hide-details
             v-model="completed_at"
+            :rules="[dateRule]"
             ></VTextField>
         </v-col>
         <v-col cols="3">
@@ -170,6 +204,52 @@ const openDialog = () => {
                 </div>
                 </template>
 
+                <template v-else-if="type === 'Module Matrix'">
+                <v-combobox
+                    label="Module Names"
+                    v-model="content_json.modules_overview_names"
+                    multiple
+                />
+                <v-combobox
+                    label="Domains"
+                    v-model="content_json.modules_overview_domains"
+                    multiple
+                />
+                <v-combobox
+                    label="Priorities"
+                    v-model="content_json.modules_overview_priorities"
+                    multiple
+                />
+                <v-combobox
+                    label="Phases"
+                    v-model="content_json.modules_overview_phases"
+                    multiple
+                />
+                </template>
+
+                <template v-else-if="type === 'Module Engineering'">
+                <v-combobox
+                    label="Module Names"
+                    v-model="content_json.modules_overview_names"
+                    multiple
+                />
+                <v-combobox
+                    label="Domains"
+                    v-model="content_json.modules_overview_domains"
+                    multiple
+                />
+                <v-combobox
+                    label="Priorities"
+                    v-model="content_json.modules_overview_priorities"
+                    multiple
+                />
+                <v-combobox
+                    label="Phases"
+                    v-model="content_json.modules_overview_phases"
+                    multiple
+                />
+                </template>
+
                 <template v-else-if="type === 'System Architecture'">
                 <v-text-field label="Auth Model" v-model="content_json.auth_model" />
                 <v-text-field label="API Style" v-model="content_json.api_style" />
@@ -196,5 +276,9 @@ const openDialog = () => {
         <v-col cols="1">
             <v-btn @click="router.push('/')" color="primary" flat>Cancel</v-btn>
         </v-col>
+        
+    </v-row>
+    <v-row>
+        <p class="ma-2">{{ error }}</p>
     </v-row>
 </template>

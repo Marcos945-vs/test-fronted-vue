@@ -1,11 +1,13 @@
 <script setup>
-import { ref } from 'vue'
+import { ref, computed } from 'vue'
 import { useRouter } from 'vue-router'
 import BaseBreadcrumb from "@/components/shared/BaseBreadcrumb.vue";
 import UiParentCard from "@/components/shared/UiParentCard.vue";
 import ArtifactContent from '@/components/ArtifactContent.vue';
+import ArtifactNoContent from '@/components/ArtifactNoContent.vue';
 import ModuleContent from '@/components/ModuleContent.vue';
 import { useSelectedStore } from '@/stores/selectedItems';
+import { ArtifactItems } from '@/_mockApis/dataTable';
 
 const selectedStore = useSelectedStore()
 
@@ -17,6 +19,15 @@ const breadcrumbs = ref([
 ]);
 
 const project = selectedStore.project;
+
+const filteredArtifacts = computed(() =>
+  ArtifactItems.filter(item => item.type === selectedStore.artifact)
+)
+
+const selectExist = computed(() => {
+  if(filteredArtifacts.value.length === 0) return false;
+  return true;
+});
 
 </script>
 
@@ -49,7 +60,8 @@ const project = selectedStore.project;
             <v-row>
                 <v-col>
                     <v-card class="mt-4 pa-2">
-                        <ArtifactContent />
+                        <ArtifactContent v-if="selectExist" />
+                        <ArtifactNoContent v-else />
                     </v-card>
                 </v-col>
                 <v-col>

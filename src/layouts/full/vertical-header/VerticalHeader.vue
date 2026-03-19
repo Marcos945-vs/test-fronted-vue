@@ -21,13 +21,16 @@ watch(priority, (newPriority) => {
 <template>
     <v-app-bar elevation="0" :priority="priority" height="64" color="containerBg" id="top">
         <v-btn
-            class=" custom-hover-primary"
+            class="hidden-md-and-down custom-hover-primary"
             icon
             size="small"
             color="primary"
             variant="text"
             @click.stop="customizer.SET_MINI_SIDEBAR(!customizer.mini_sidebar)"
         >
+            <Menu2Icon size="20" />
+        </v-btn>
+        <v-btn class="hidden-lg-and-up" size="small" icon variant="text" @click.stop="customizer.SET_SIDEBAR_DRAWER">
             <Menu2Icon size="20" />
         </v-btn>
         

@@ -128,18 +128,6 @@ const ArtifactItems = [
       data_model_notes: "Normalized relational schema",
       scalability_notes: "Horizontal scaling with load balancers"
     }
-  },
-  {
-    project_id: "P-007",
-    type: "Phase Scope",
-    status: "Blocked",
-    owner: "U-207",
-    completed_at: null,
-    content_json: {
-      included_modules: ["Auth", "Dashboard"],
-      excluded_items: ["Legacy API"],
-      acceptance_criteria: ["All tests pass", "Performance under 200ms"]
-    }
   }
 ]
 

@@ -11,7 +11,7 @@ export const useSelectedStore = defineStore('select',{
       status: string;
       modules: number[]
     } | null,
-    artifact: 'Strategic alignment' as string | null,
+    artifact: '' as string | null,
     module: null as number | null,
     msg: '' as string | null,
   }),
