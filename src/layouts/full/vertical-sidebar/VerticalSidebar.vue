@@ -1,11 +1,13 @@
 <script setup lang="ts">
-import { ref, shallowRef } from 'vue';
+import { ref, shallowRef, computed } from 'vue';
 import { useCustomizerStore } from '@/stores/customizer';
 import { useSelectedStore } from '@/stores/selectedItems';
-import {sidebarArtifact, sidebarItem } from './sidebarItem';
+import {sidebarArtifact, sidebarItem, sidebarModule} from './sidebarItem';
+import { ModulesItems } from '@/_mockApis/dataTable';
 
 import NavItem from './NavItem/index.vue';
-import NavItemSelect from './NavItem/select.vue';
+import NavItemSelectArtifact from './NavItem/select.vue';
+import NavItemSelectModule from './NavItem/select2.vue';
 import NavCollapse from './NavCollapse/NavCollapse.vue';
 import NavGroup from './NavGroup/index.vue'
 import { useAuthStore } from '@/stores/auth';
@@ -17,6 +19,7 @@ const customizer = useCustomizerStore();
 const sidebarMenu = shallowRef(sidebarItem);
 const authStore = useAuthStore();
 const selectedStore = useSelectedStore();
+
 
 </script>
 
@@ -55,7 +58,11 @@ const selectedStore = useSelectedStore();
             <v-list class="py-4 pa-6">
                 <template v-if="route.name === 'DetailsProject'" v-for="(item, i) in sidebarArtifact">
                     <NavGroup :item="{ header: selectedStore.project?.name }" v-if="item.header" :key="item.title" />
-                    <NavItemSelect :item="item" v-else class="leftPadding" />
+                    <NavItemSelectArtifact :item="item" v-else class="leftPadding" />
+                </template>
+                <template v-if="route.name === 'DetailsProject'" v-for="(item, i) in sidebarModule">
+                    <!-- <NavGroup :item="{ header: selectedStore.project?.name }" v-if="item.header" :key="item.title" /> -->
+                    <NavItemSelectModule :item="item"  class="leftPadding" />
                 </template>
             </v-list>
         </perfect-scrollbar>

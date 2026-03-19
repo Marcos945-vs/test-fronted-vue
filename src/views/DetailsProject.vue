@@ -53,7 +53,7 @@ const project = selectedStore.project;
                     </v-card>
                 </v-col>
                 <v-col>
-                    <v-card class="mt-4 pa-2">
+                    <v-card v-if="selectedStore.module" class="mt-4 pa-2">
                         <ModuleContent />
                     </v-card>
                 </v-col>

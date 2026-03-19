@@ -1,3 +1,4 @@
+import { useSelectedStore } from '@/stores/selectedItems';
 import { ComponentsIcon } from 'vue-tabler-icons';
 
 const MainRoutes = {
@@ -45,8 +46,16 @@ const MainRoutes = {
         },
         {
             name: 'DetailsProject',
-            path: '/DetailsProject/:name',
-            component: () => import('@/views/DetailsProject.vue')
+            path: '/DetailsProject/:projectName',
+            component: () => import('@/views/DetailsProject.vue'),
+            beforeEnter: () => {
+                const selectedStore = useSelectedStore();
+                if (!selectedStore.project) {
+                // redirige si no hay proyecto cargado
+                return '/TableProject';
+                }
+                return true; // permite continuar
+            }
         },
         {
             name: 'DetailsModule',

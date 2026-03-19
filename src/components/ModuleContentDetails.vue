@@ -5,10 +5,9 @@ import { ModulesItems } from '@/_mockApis/dataTable';
 
 const selectedStore = useSelectedStore()
 
-const module = computed(() => 
-    ModulesItems.find(m => m.id === selectedStore.project?.modules.find(mod => mod === m.id),
-));
-
+const module = computed((item) => 
+    ModulesItems.find(m => m.id === selectedStore.module),
+);
 
 </script>
 

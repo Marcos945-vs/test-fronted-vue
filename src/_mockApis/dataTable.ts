@@ -35,17 +35,18 @@ const AuditEventHeaders = [
 ]
 
 const ProjectItems = [
-  { name: "Project Alpha", client: "Acme Corp", created: "John Doe", status: "Draft" },
-  { name: "Project Beta", client: "Globex Inc", created: "Jane Doe", status: "Discovery" },
-  { name: "Project Gamma", client: "Initech", created: "Richard Roe", status: "Execution" },
-  { name: "Project Delta", client: "Umbrella Corp", created: "Mary Major", status: "Delivered" },
-  { name: "Project Epsilon", client: "Soylent Corp", created: "John Smith", status: "Draft" },
-  { name: "Project Zeta", client: "Stark Industries", created: "Jane Smith", status: "Execution" },
-  { name: "Project Theta", client: "Wayne Enterprises", created: "Robert Brown", status: "Discovery" },
-  { name: "Project Iota", client: "Wonka Factory", created: "Emily Davis", status: "Delivered" },
-  { name: "Project Kappa", client: "Cyberdyne Systems", created: "Michael Johnson", status: "Draft" },
-  { name: "Project Lambda", client: "Tyrell Corp", created: "Sarah Wilson", status: "Execution" }
-]
+  { name: "Project Alpha", client: "Acme Corp", created: "John Doe", status: "Draft", modules: [1, 2, 3] },
+  { name: "Project Beta", client: "Globex Inc", created: "Jane Doe", status: "Discovery", modules: [4, 5] },
+  { name: "Project Gamma", client: "Initech", created: "Richard Roe", status: "Execution", modules: [6] },
+  { name: "Project Delta", client: "Umbrella Corp", created: "Mary Major", status: "Delivered", modules: [7, 8] },
+  { name: "Project Epsilon", client: "Soylent Corp", created: "John Smith", status: "Draft", modules: [9] },
+  { name: "Project Zeta", client: "Stark Industries", created: "Jane Smith", status: "Execution", modules: [10, 11] },
+  { name: "Project Theta", client: "Wayne Enterprises", created: "Robert Brown", status: "Discovery", modules: [12] },
+  { name: "Project Iota", client: "Wonka Factory", created: "Emily Davis", status: "Delivered", modules: [13, 14] },
+  { name: "Project Kappa", client: "Cyberdyne Systems", created: "Michael Johnson", status: "Draft", modules: [15] },
+  { name: "Project Lambda", client: "Tyrell Corp", created: "Sarah Wilson", status: "Execution", modules: [16, 17] }
+];
+
 
 const ArtifactItems = [
   {

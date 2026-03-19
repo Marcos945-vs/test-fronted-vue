@@ -13,7 +13,7 @@ export const useSelectedStore = defineStore('select',{
     } | null,
     artifact: 'Strategic alignment' as string | null,
     module: null as number | null,
-    msg: 'feo' as string | null,
+    msg: '' as string | null,
   }),
   actions: {
     selectProject(project: { name: string; client: string; created: string; status: string; modules?: number[] }) {

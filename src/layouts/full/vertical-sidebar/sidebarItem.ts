@@ -9,6 +9,38 @@ import {
     Home2Icon
   } from 'vue-tabler-icons';
 
+import { useSelectedStore } from '@/stores/selectedItems';
+import { ModulesItems } from '@/_mockApis/dataTable';
+import { computed } from 'vue';
+
+const selectedStore = useSelectedStore();
+
+const modules = computed(() => {
+  if (selectedStore.project) {
+    return selectedStore.project.modules.map(id => {
+      const module = ModulesItems.find(m => m.id === id);
+      return module ? { 
+        ...module, 
+        objective: module.objective 
+      } : null;
+    }).filter(Boolean); // elimina los null si no se encuentra el módulo
+  }
+  return [];
+});
+
+export const sidebarModule = computed(() => {
+  if (selectedStore.project) {
+    return [
+      { header: 'Objectives' },
+      ...modules.value
+        .map(m => m ? { title: m.objective, icon: CircleIcon } : null)
+        .filter(Boolean) // elimina los null
+    ];
+  }
+  return [];
+});
+
+
 
   export interface menu {
     header?: string;
@@ -83,3 +115,4 @@ export const sidebarArtifact = [
         icon: CircleIcon,
     },
 ];
+
