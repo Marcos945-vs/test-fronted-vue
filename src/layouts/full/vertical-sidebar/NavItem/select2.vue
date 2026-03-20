@@ -8,6 +8,8 @@ const props = defineProps({ item: Object, level: Number });
 
 const handleClick = () => {
     selectedStore.selectModule(ModulesItems.find(m => m.objective === props.item.title).id)
+    selectedStore.selectData = 'module'
+    console.log(selectedStore.selectData)
 }
 </script>
 

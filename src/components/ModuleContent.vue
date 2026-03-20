@@ -1,5 +1,5 @@
 <script setup>
-import { ref, computed, onMounted } from 'vue'
+import { ref, computed } from 'vue'
 import { useSelectedStore } from '@/stores/selectedItems';
 import { ModulesItems } from '@/_mockApis/dataTable';
 
@@ -8,7 +8,6 @@ const selectedStore = useSelectedStore()
 const module = computed(() => 
     ModulesItems.find(m => m.id === selectedStore.module,
 ));
-
 
 </script>
 

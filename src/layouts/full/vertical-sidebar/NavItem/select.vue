@@ -7,6 +7,8 @@ const props = defineProps({ item: Object, level: Number });
 
 const handleClick = () => {
     selectedStore.selectArtifact(props.item.title)
+    selectedStore.selectData = 'artifact'
+    console.log(selectedStore.selectData)
 }
 </script>
 
