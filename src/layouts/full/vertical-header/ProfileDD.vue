@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { MailIcon , ArrowRightSquareIcon } from 'vue-tabler-icons';
+import { MailIcon , ArrowRightSquareIcon, UserIcon } from 'vue-tabler-icons';
 import { profileDD } from '@/_mockApis/headerData';
 import { useAuthStore } from '@/stores/auth';
 const authStore = useAuthStore();
@@ -13,7 +13,7 @@ const authStore = useAuthStore();
         <template v-slot:activator="{ props }">
             <v-btn variant="text" class="custom-hover-primary" size="small" v-bind="props" icon>
                 <v-avatar size="35">
-                    <img src="@/assets/images/profile/user-1.jpg" width="35" alt="Julia" />
+                    <v-icon size="38" color="#00000" icon="mdi-account"></v-icon>
                 </v-avatar>
             </v-btn>
         </template>

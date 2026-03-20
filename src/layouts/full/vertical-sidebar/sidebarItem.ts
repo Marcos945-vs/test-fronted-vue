@@ -15,6 +15,15 @@ import { computed } from 'vue';
 
 const selectedStore = useSelectedStore();
 
+
+import type { FunctionalComponent } from 'vue';
+
+type TablerIconComponent = FunctionalComponent<any>;
+
+type SidebarModuleItem =
+  | { title: string; icon: TablerIconComponent }
+  | { header: string };
+
 const modules = computed(() => {
   if (selectedStore.project) {
     return selectedStore.project.modules.map(id => {
@@ -28,14 +37,16 @@ const modules = computed(() => {
   return [];
 });
 
-export const sidebarModule = computed(() => {
+export const sidebarModule = computed<SidebarModuleItem[]>(() => {
   if (selectedStore.project) {
-    return [
-      { header: 'Objectives' },
+    let modulesList: SidebarModuleItem[] = [
+      { header: 'Modules' },
       ...modules.value
         .map(m => m ? { title: m.objective, icon: CircleIcon } : null)
-        .filter(Boolean) // elimina los null
+        .filter(Boolean) as { title: string; icon: TablerIconComponent }[]
     ];
+    console.log('sidebarModule:', modulesList);
+    return modulesList;
   }
   return [];
 });

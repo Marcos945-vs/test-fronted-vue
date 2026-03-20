@@ -19,7 +19,7 @@ watch(priority, (newPriority) => {
 </script>
 
 <template>
-    <v-app-bar elevation="0" :priority="priority" height="64" color="containerBg" id="top">
+    <v-app-bar elevation="3" :priority="priority" height="64" color="containerBg" id="top">
         <v-btn
             class="hidden-md-and-down custom-hover-primary"
             icon
