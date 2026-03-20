@@ -59,14 +59,10 @@ const selectExist = computed(() => {
             </v-card-text>
             <v-row>
                 <v-col>
-                    <v-card class="mt-4 pa-2">
-                        <ArtifactContent v-if="selectExist" />
-                        <ArtifactNoContent v-else />
-                    </v-card>
-                </v-col>
-                <v-col>
-                    <v-card v-if="selectedStore.module" class="mt-4 pa-2">
-                        <ModuleContent />
+                    <v-card   class="mt-4 pa-2">
+                        <ArtifactContent v-if="selectedStore.selectData ==='artifact' && selectExist" />
+                        <ArtifactNoContent v-else-if="selectedStore.selectData ==='artifact' && !selectExist" />
+                        <ModuleContent v-else-if="selectedStore.selectData ==='module'"/>
                     </v-card>
                 </v-col>
             </v-row>

@@ -14,6 +14,7 @@ export const useSelectedStore = defineStore('select',{
     artifact: '' as string | null,
     module: null as number | null,
     msg: '' as string | null,
+    selectData: null as string | null,
   }),
   actions: {
     selectProject(project: { name: string; client: string; created: string; status: string; modules?: number[] }) {
