@@ -1,11 +1,11 @@
 <script setup lang="ts">
 import { ref, watch, computed } from 'vue';
 import { useCustomizerStore } from '../../../stores/customizer';
-import { ActivityIcon, Menu2Icon} from 'vue-tabler-icons';
+import { ActivityIcon, Menu2Icon } from 'vue-tabler-icons';
 import ProfileDD from './ProfileDD.vue';
 import RightMobileSidebar from './RightMobileSidebar.vue';
 import ThemeToggler from './ThemeToggler.vue';
-import { AuditEvents } from '@/_mockApis/dataTable'
+import { AuditEvents } from '@/_mockApis/dataTable';
 
 const customizer = useCustomizerStore();
 const appsdrawer = ref(false);
@@ -14,8 +14,6 @@ const priority = ref(customizer.setHorizontalLayout ? 0 : 0);
 watch(priority, (newPriority) => {
     priority.value = newPriority;
 });
-
-
 </script>
 
 <template>
@@ -33,41 +31,37 @@ watch(priority, (newPriority) => {
         <v-btn class="hidden-lg-and-up" size="small" icon variant="text" @click.stop="customizer.SET_SIDEBAR_DRAWER">
             <Menu2Icon size="20" />
         </v-btn>
-        
+
         <v-spacer />
+
+        <v-tooltip text="Dark/Light Mode">
+            <template v-slot:activator="{ props }">
+                <ThemeToggler v-bind="props"/>
+            </template>
+        </v-tooltip>
         
-        <ThemeToggler />
+        <v-tooltip text="Audit Events">
+            <template v-slot:activator="{ props }">
+                <div v-bind="props" class="ms-2">
+                    <v-btn icon variant="text" color="primary" class="custom-hover-primary" to="/Audit" size="small">
+                        <v-badge v-if="AuditEvents.length > 0" color="secondary" :content="AuditEvents.length" offset-x="-4" offset-y="-3">
+                            <ActivityIcon stroke-width="1.5" size="22" />
+                        </v-badge>
 
-        <div class="ms-2">
-            <v-btn icon variant="text" color="primary" class="custom-hover-primary" to="/Audit" size="small">
-                <v-badge
-                v-if="AuditEvents.length > 0"
-                color="secondary"
-                :content="AuditEvents.length"
-                offset-x="-4"
-                offset-y="-3"
-                >
-                <ActivityIcon stroke-width="1.5" size="22" />
-                </v-badge>
+                        <!-- Cuando no hay eventos, se muestra solo el icono -->
+                        <ActivityIcon v-else stroke-width="1.5" size="22" />
+                    </v-btn>
+                </div>
+            </template>
+        </v-tooltip>
 
-                <!-- Cuando no hay eventos, se muestra solo el icono -->
-                <ActivityIcon
-                v-else
-                stroke-width="1.5"
-                size="22"
-                />
-            </v-btn>
-        </div>
-
-        
         <!-- Notification -->
         <!-- ---------------------------------------------- -->
-        
+
         <!-- ---------------------------------------------- -->
         <!-- User Profile -->
         <!-- ---------------------------------------------- -->
-         <!-- right sidebar -->
-        
+        <!-- right sidebar -->
 
         <div class="ml-2">
             <ProfileDD />
