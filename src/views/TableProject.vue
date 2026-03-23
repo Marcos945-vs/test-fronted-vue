@@ -73,13 +73,14 @@
 </template>
 
 <script setup>
-import { ref } from 'vue';
+import { onMounted, ref } from 'vue';
 import BaseBreadcrumb from '@/components/shared/BaseBreadcrumb.vue';
 import UiParentCard from '@/components/shared/UiParentCard.vue';
 import { ProjectItems, ProjectHeaders } from '@/_mockApis/dataTable';
 import { useRouter } from 'vue-router';
 import { useSelectedStore } from '@/stores/selectedItems';
 import { useAuditEventsStore } from '@/stores/auditEvents';
+import axiosServices from '@/utils/axios';
 
 const auditStore = useAuditEventsStore();
 const selectedStore = useSelectedStore();
@@ -97,7 +98,17 @@ const projects = ref([...ProjectItems]);
 const editDialog = ref(false);
 const selectedProject = ref({});
 
+onMounted(() => {
+    getProjects();
+    //auditStore.fetchAuditEvents();
+});
 // Funciones
+async function getProjects() {
+    const response = await axiosServices.get('/projects');
+    /* projects.value = response.data; */
+    console.log('Projects fetched:', response.data);
+}
+
 function openEditDialog(item) {
     selectedProject.value = { ...item };
     editDialog.value = true;
