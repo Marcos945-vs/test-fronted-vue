@@ -238,3 +238,16 @@ html {
 .z-1{
     z-index: 1;
 }
+
+.v-skeleton-loader {
+    .v-skeleton-loader__avatar,
+    .v-skeleton-loader__button,
+    .v-skeleton-loader__chip,
+    .v-skeleton-loader__divider,
+    .v-skeleton-loader__heading,
+    .v-skeleton-loader__image,
+    .v-skeleton-loader__ossein,
+    .v-skeleton-loader__text {
+        background: rgba(var(--v-theme-on-surface), 0.12);
+    }
+}

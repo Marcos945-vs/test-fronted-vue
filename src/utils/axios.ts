@@ -2,6 +2,7 @@
  * axios setup to use mock service
  */
 
+import { router } from '@/router';
 import axios from 'axios';
 
 const axiosServices = axios.create({
@@ -26,16 +27,17 @@ axiosServices.interceptors.request.use(
     },
     (error) => Promise.reject(error)
 );
-/* axiosServices.interceptors.response.use(
+axiosServices.interceptors.response.use(
     
-    (config) => {
-        const user = JSON.parse(localStorage.getItem('user'));
-        if (user && user.token) {
-            config.headers.Authorization = `Bearer ${user.token}`;
+    (response) => response,
+    (error) => {
+        if (error.response && error.response.status === 401) {
+            localStorage.removeItem('user');
+            router.push('/auth/login');
         }
-        return config;
-    },
-    (error) => Promise.reject((error.response && error.response.data) || 'Wrong Services')
-); */
+        return Promise.reject(error);
+    }
+
+);
 
 export default axiosServices;

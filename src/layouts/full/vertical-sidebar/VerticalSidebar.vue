@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, shallowRef, computed } from 'vue';
+import { ref, shallowRef, computed, onMounted } from 'vue';
 import { useCustomizerStore } from '@/stores/customizer';
 import { useSelectedStore } from '@/stores/selectedItems';
 import { sidebarArtifact, sidebarItem, sidebarModule } from './sidebarItem';
@@ -45,8 +45,8 @@ const selectedStore = useSelectedStore();
                             <img src="@/assets/images/profile/user-1.jpg" width="40" />
                         </v-avatar>
                         <div class="ml-2 d-flex flex-column" v-if="!customizer.mini_sidebar">
-                            <strong>{{ authStore.user.firstName || 'Unknown' }}</strong>
-                            <span class="text-subtitle-1 font-weight-regular textSecondary">Administrator</span>
+                            <strong>{{ authStore.user.user.name || 'Unknown' }}</strong>
+                            <span class="text-subtitle-1 font-weight-regular textSecondary">{{ authStore.user.user.roles[0].name || 'Unknown' }}</span>
                         </div>
                     </div>
                 </div>

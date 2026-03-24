@@ -25,11 +25,11 @@ const authStore = useAuthStore();
                         <img src="@/assets/images/profile/user-1.jpg" width="80" />
                     </v-avatar>
                     <div class="ml-3">
-                        <h6 class="text-h6">{{ authStore.user.firstName || 'Unknown' }}</h6>
-                        <span class="text-subtitle-1 font-weight-regular textSecondary">Administrator</span>
+                        <h6 class="text-h6">{{ authStore.user.user.name || 'Unknown' }}</h6>
+                        <span class="text-subtitle-1 font-weight-regular textSecondary">{{ authStore.user.user.roles[0].name || 'Unknown' }}</span>
                         <div class="d-flex align-center mt-1 textSecondary">
                             <MailIcon size="18" stroke-width="1" />
-                            <span class="text-subtitle-1 font-weight-regular ms-2">info@flexy.com</span>
+                            <span class="text-subtitle-1 font-weight-regular ms-2">{{ authStore.user.user.email || 'Unknown' }}</span>
                         </div>
                     </div>
                 </div>

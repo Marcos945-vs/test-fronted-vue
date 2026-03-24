@@ -3,9 +3,9 @@
   "include": ["env.d.ts", "src/**/*", "src/**/*.vue"],
   "compilerOptions": {
   "noEmit": true,
+  "verbatimModuleSyntax": false,
   "preserveValueImports": false,
   "importsNotUsedAsValues": "remove",
-  "verbatimModuleSyntax": true,
   "baseUrl": ".",
   "paths": {
     "@/*": ["./src/*"]
