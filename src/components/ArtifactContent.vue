@@ -2,42 +2,48 @@
 import { ArtifactItems } from '@/_mockApis/dataTable'
 import { computed, ref } from 'vue'
 import { useSelectedStore } from '@/stores/selectedItems';
+import { typeArtifact, statusArtifact } from '@/enum/enum'
 
 const selectedStore = useSelectedStore()
 
+const artifacts = ref([...ArtifactItems])
 // Filtrar los artefactos según el tipo recibido
-const filteredArtifacts = computed(() =>
-  ArtifactItems.filter(item => item.type === selectedStore.artifact)
+const filteredArtifacts:any = computed(() =>
+  artifacts.value.filter(item => item.type === selectedStore.artifact)
 )
 
 const dialog = ref(false);
-const selectedJson = ref({});
 
-const editDialog = ref(false);
-const selectedArtifact = ref({});
+const dialogJson = ref(false);
+const selectedArtifact = ref<any>(null);
 
 // Funciones
-function openEditDialog(item: any) {
+function openDialogJson(item: any) {
   selectedArtifact.value = { ...item };
-  editDialog.value = true;
+  dialogJson.value = true;
 }
 
-function saveEdit() {
-  if (!selectedArtifact.value) return;
-  const index = artifact.value.findIndex(p => p.id === selectedArtifact.value.id);
-  if (index !== -1) {
-    artifact.value[index] = { ...selectedArtifact.value };
-  }
-  editDialog.value = false;
-}
-
-function deleteArtifact(item) {
-  artifact.value = artifact.value.filter(p => p.id !== item.id);
-}
-
-const openDialog = (content_json) => {
+const openDialog = (item: any) => {
+  selectedArtifact.value = { ...item }
     dialog.value = true
-    selectedJson.value = content_json
+}
+
+function saveJson() {
+  if (!selectedArtifact.value) return;
+  const index = artifacts.value.findIndex(p => p.project_id === selectedArtifact.value.project_id);
+  if (index !== -1) {
+    artifacts.value[index] = { ...selectedArtifact.value };
+  }
+  dialogJson.value = false;
+}
+
+function save() {
+  if (!selectedArtifact.value) return;
+  const index = artifacts.value.findIndex(p => p.project_id === selectedArtifact.value.project_id);
+  if (index !== -1) {
+    artifacts.value[index] = { ...selectedArtifact.value };
+  }
+  dialog.value = false;
 }
 
 
@@ -172,58 +178,115 @@ const openDialog = (content_json) => {
           </div>
         </v-card-text>
         <v-card-actions>
-          <v-btn @click="openDialog(filteredArtifacts)">Update</v-btn>
+          <v-btn @click="openDialog(item)">Update</v-btn>
         </v-card-actions>
       </v-card>
-      <!-- Dialog para mostrar el JSON -->
-                <v-dialog v-model="dialog" max-width="600">
+
+      <!-- Dialog para upgradear el artifact -->
+          <v-dialog v-model="dialog" max-width="600">
             <v-card>
-            <v-card-title>Content JSON - {{ type }}</v-card-title>
+            <v-card-title>{{ item.type }}</v-card-title>
             <v-card-text>
-                <!-- Render dinámico según el type -->
-                <template v-if="type === 'Strategic alignment'">
-                <v-text-field label="Transformation" v-model="content_json.transformation" />
-                <v-combobox label="Supported Decisions" v-model="content_json.supported_decisions" multiple />
+              <!-- Elementos fijos del artifact -->
+              <v-col cols="12">
+                <VTextField  
+                type="text" 
+                label="Project ID"
+                placeholder="123456" 
+                hide-details 
+                v-model="item.project_id"
+                ></VTextField>
+            </v-col>
+            <v-col cols="12">
+                <v-select
+                    :items="typeArtifact"
+                    v-model="item.type"
+                    label="Select Type"
+                    hide-details
+                />
+            </v-col>
+            <v-col cols="12">
+                    <v-select
+                    :items="statusArtifact"
+                    v-model="item.status"
+                    label="Select Status"
+                    hide-details
+                />
+            </v-col>
+            <v-col cols="12">
+                <VTextField  
+                type="text" 
+                label="Owner User ID"
+                placeholder="U-001" 
+                hide-details
+                v-model="item.owner_user_id"
+                ></VTextField>
+            </v-col>
+            <v-col cols="12">
+                <VTextField  
+                type="text" 
+                label="Completed at"
+                placeholder="2026-03-03" 
+                hide-details
+                v-model="item.completed_at"
+                ></VTextField>
+            </v-col>
+          </v-card-text>
+            <v-card-actions>
+              <v-btn @click="openDialogJson(item)">Json</v-btn>
+              <v-btn @click="save()">Save</v-btn>
+              <v-btn @click="dialog = false">Close</v-btn>
+            </v-card-actions>
+          </v-card>
+              <!-- Render dinámico según el type -->
+              <v-dialog v-model="dialogJson" max-width="600">
+                <v-card>
+                <v-card-title>{{ item.type }}</v-card-title>
+                <v-card-text>
+                <template v-if="item.type === 'Strategic alignment'">
+                <v-text-field label="Transformation" v-model="item.content_json.transformation" />
+                <v-combobox label="Supported Decisions" v-model="item.content_json.supported_decisions" multiple />
                 <!-- Ejemplo de array de objetos -->
-                <div v-for="(m, i) in content_json.measurable_success" :key="i">
+                <div v-for="(m, i) in item.content_json.measurable_success" :key="i">
                     <v-text-field label="Metric" v-model="m.metric" />
                     <v-text-field label="Target" v-model="m.target" />
                 </div>
-                <v-combobox label="Out of Scope" v-model="content_json.out_of_scope" multiple />
+                <v-combobox label="Out of Scope" v-model="item.content_json.out_of_scope" multiple />
                 </template>
 
-                <template v-else-if="type === 'Big picture'">
-                <v-text-field label="Ecosystem Vision" v-model="content_json.ecosystem_vision" />
-                <v-combobox label="Impacted Domains" v-model="content_json.impacted_domains" multiple />
-                <v-text-field label="Success Definition" v-model="content_json.success_definition" />
+                <template v-else-if="item.type === 'Big picture'">
+                <v-text-field label="Ecosystem Vision" v-model="item.content_json.ecosystem_vision" />
+                <v-combobox label="Impacted Domains" v-model="item.content_json.impacted_domains" multiple chips/>
+                <v-text-field label="Success Definition" v-model="item.content_json.success_definition" />
                 </template>
 
-                <template v-else-if="type === 'Domain breakdown'">
-                <div v-for="(d, i) in content_json.domains" :key="i">
+                <template v-else-if="item.type === 'Domain breakdown'">
+                <div v-for="(d, i) in item.content_json.domains" :key="i">
                     <v-text-field label="Name" v-model="d.name" />
                     <v-text-field label="Objective" v-model="d.objective" />
                     <v-text-field label="Owner User ID" v-model="d.owner_user_id" />
                 </div>
                 </template>
 
-                <template v-else-if="type === 'System Architecture'">
-                <v-text-field label="Auth Model" v-model="content_json.auth_model" />
-                <v-text-field label="API Style" v-model="content_json.api_style" />
-                <v-textarea label="Data Model Notes" v-model="content_json.data_model_notes" />
-                <v-textarea label="Scalability Notes" v-model="content_json.scalability_notes" />
+                <template v-else-if="item.type === 'System Architecture'">
+                <v-text-field label="Auth Model" v-model="item.content_json.auth_model" />
+                <v-text-field label="API Style" v-model="item.content_json.api_style" />
+                <v-textarea label="Data Model Notes" v-model="item.content_json.data_model_notes" />
+                <v-textarea label="Scalability Notes" v-model="item.content_json.scalability_notes" />
                 </template>
 
-                <template v-else-if="type === 'Phase Scope'">
-                <v-combobox label="Included Modules" v-model="content_json.included_modules" multiple />
-                <v-combobox label="Excluded Items" v-model="content_json.excluded_items" multiple />
-                <v-combobox label="Acceptance Criteria" v-model="content_json.acceptance_criteria" multiple />
+                <template v-else-if="item.type === 'Phase Scope'">
+                <v-combobox label="Included Modules" v-model="item.content_json.included_modules" multiple />
+                <v-combobox label="Excluded Items" v-model="item.content_json.excluded_items" multiple />
+                <v-combobox label="Acceptance Criteria" v-model="item.content_json.acceptance_criteria" multiple />
                 </template>
             </v-card-text>
             <v-card-actions>
-                <v-btn @click="dialog = false">Close</v-btn>
-                <v-btn color="success" @click="saveContentJson()">Save</v-btn>
+                <v-btn @click="dialogJson = false">Close</v-btn>
+                <v-btn color="success" @click="saveJson()">Save</v-btn>
             </v-card-actions>
             </v-card>
+            </v-dialog>
         </v-dialog>
     </v-col>
   </v-row>
