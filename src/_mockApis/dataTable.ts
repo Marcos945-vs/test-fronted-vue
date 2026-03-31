@@ -51,7 +51,7 @@ const ProjectItems = [
 const ArtifactItems = [
   {
     project_id: "P-001",
-    type: "Strategic alignment",
+    type: "Strategic Alignment",
     status: "Not started",
     owner: "U-201",
     completed_at: null,
@@ -67,7 +67,7 @@ const ArtifactItems = [
   },
   {
     project_id: "P-002",
-    type: "Big picture",
+    type: "Big Picture",
     status: "In Progress",
     owner: "U-202",
     completed_at: null,
@@ -79,7 +79,7 @@ const ArtifactItems = [
   },
   {
     project_id: "P-003",
-    type: "Domain breakdown",
+    type: "Domain Breakdown",
     status: "Blocked",
     owner: "U-203",
     completed_at: null,

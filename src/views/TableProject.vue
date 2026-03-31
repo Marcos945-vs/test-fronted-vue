@@ -208,6 +208,5 @@ function deleteProject(item) {
 
 const goToDetail = (item) => {
     selectedStore.selectProject(item);
-    router.push(`/DetailsProject/${item.name}`);
 };
 </script>

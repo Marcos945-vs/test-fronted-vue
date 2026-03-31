@@ -104,26 +104,33 @@ export const sidebarModule = computed<SidebarModuleItem[]>(() => {
 export const sidebarArtifact = [
     { header: 'Project name' },
     {
-        title: 'Strategic alignment',
+        title: 'Strategic Alignment',
         icon: CircleIcon,
+        to: 'strategic_alignment'
     },{
-        title: 'Big picture',
+        title: 'Big Picture',
         icon: CircleIcon,
+        to: 'big_picture'
     },{
-        title: 'Domain breakdown',
+        title: 'Domain Breakdown',
         icon: CircleIcon,
+        to: 'domain_breakdown'
     },{
         title: 'Module Matrix',
         icon: CircleIcon,
+        to: 'module_matrix'
     },{
         title: 'Module Engineering',
         icon: CircleIcon,
+        to: 'module_engineering'
     },{
         title: 'System Architecture',
         icon: CircleIcon,
+        to: 'system_architecture'
     },{
         title: 'Phase Scope',
         icon: CircleIcon,
+        to: 'phase_scope'
     },
 ];
 

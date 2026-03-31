@@ -1,13 +1,17 @@
 <script setup lang="ts">
 const props = defineProps({
-    title: String
+    title: String,
+    card_vertical_padding: {
+        type: String,
+        default: '4'
+    }
 });
 </script>
 
 // ===============================|| Ui Parent Card||=============================== //
 <template>
     <v-card elevation="10" >
-        <v-card-item class="py-4 px-6">
+        <v-card-item class="px-6 py-2">
             <div class="d-sm-flex align-center justify-space-between">
                 <v-card-title class="text-h5">{{ title }}</v-card-title>
                 <!-- <template v-slot:append> -->
@@ -16,7 +20,7 @@ const props = defineProps({
             </div>
         </v-card-item>
         <v-divider></v-divider>
-        <v-card-text>
+        <v-card-text :class="`py-${card_vertical_padding}`">
             <slot />
         </v-card-text>
     </v-card>

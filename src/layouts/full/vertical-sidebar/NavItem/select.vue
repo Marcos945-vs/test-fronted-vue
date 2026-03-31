@@ -6,7 +6,7 @@ const selectedStore = useSelectedStore()
 const props = defineProps({ item: Object, level: Number });
 
 const handleClick = () => {
-    selectedStore.selectArtifact(props.item.title)
+    selectedStore.selectArtifact(props.item)
     selectedStore.selectData = 'artifact'
     console.log(selectedStore.selectData)
 }
@@ -17,6 +17,7 @@ const handleClick = () => {
     <v-list-item
         rounded
         class="mb-1"
+        :active="selectedStore.artifact?.url === item.to"
         :disabled="item.disabled"
         :target="item.type === 'external' ? '_blank' : ''"
         v-scroll-to="{ el: '#top' }"

@@ -18,6 +18,7 @@ const handleClick = () => {
     <v-list-item
         rounded
         class="mb-1"
+        :active="selectedStore.selectData === 'module' && selectedStore.module === item.id"
         :disabled="item.disabled"
         :target="item.type === 'external' ? '_blank' : ''"
         v-scroll-to="{ el: '#top' }"

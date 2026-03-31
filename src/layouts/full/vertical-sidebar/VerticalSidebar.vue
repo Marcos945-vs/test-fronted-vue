@@ -62,13 +62,13 @@ const selectedStore = useSelectedStore();
                 </template>
             </v-list>
             <v-list class="py-4 pa-6">
-                <template v-if="route.name === 'DetailsProject'" v-for="(item, i) in sidebarArtifact">
+                <template v-if="route.fullPath.includes('DetailsProject')" v-for="(item, i) in sidebarArtifact">
                     <NavGroup :item="{ header: selectedStore.project?.name }" v-if="item.header" :key="item.title" />
-                    <NavItemSelectArtifact :item="item" v-else class="leftPadding" />
+                    <NavItemSelectArtifact :level="1" :item="item" v-else class="leftPadding" />
                 </template>
-                <template v-if="route.name === 'DetailsProject'" v-for="(item, i) in sidebarModule">
+                <template v-if="route.fullPath.includes('DetailsProject')" v-for="(item, i) in sidebarModule">
                     <NavGroup :item="{ header: item.header }" v-if="item.header" />
-                    <NavItemSelectModule :item="item" v-else class="leftPadding" />
+                    <NavItemSelectModule :level="1" :item="item" v-else class="leftPadding" />
                 </template>
             </v-list>
         </perfect-scrollbar>

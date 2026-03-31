@@ -13,7 +13,6 @@ const status = ref('');
 const created_by = ref('');
 const description = ref('');
 
-// ✅ Reglas de validación
 const requiredRule = (v) => !!v || 'Este campo es obligatorio';
 const minLengthRule = (min) => (v) => (v && v.length >= min) || `Debe tener al menos ${min} caracteres`;
 const onlyLettersRule = (v) => /^[A-Za-z\s]+$/.test(v) || 'Solo se permiten letras';
