@@ -38,7 +38,7 @@
                     </template>
                     <!-- Columna de acciones -->
                     <template v-slot:item.actions="{ item }">
-                        <v-tooltip text="Edit Project">
+                        <v-tooltip v-if="authStore.user.user.roles[0].name == 'admin' || authStore.user.abilities.includes('edit_projects')" text="Edit Project">
                             <!-- v-if="authStore.user.user.roles[0].name == 'admin' || authStore.user.user.abilities.includes('edit_projects')" -->
                             <template v-slot:activator="{ props }">
                                 <v-btn v-bind="props" icon size="30" color="success" class="mr-1" @click="openEditDialog(item)">
@@ -132,10 +132,10 @@ const ProjectHeaders = [
     { title: 'Actions', align: 'center', key: 'actions' }
 ];
 
-const page = ref({ title: 'List Project' });
+const page = ref({ title: 'Projects List' });
 const breadcrumbs = ref([
     { text: 'Home', disabled: false, href: '/' },
-    { text: 'List Projects', disabled: true, href: '#' }
+    { text: 'Projects List', disabled: true, href: '#' }
 ]);
 
 const search = ref('');
@@ -146,7 +146,7 @@ const editDialog = ref(false);
 const selectedProject = ref({});
 
 onMounted(async () => {
-    console.log('User', authStore.user.user);
+    console.log('User', authStore.user);
     projects.value = await getProjects();
     loading.value = false;
 });

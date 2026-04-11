@@ -1,15 +1,21 @@
 <script setup>
 import Icon from '../Icon.vue';
 import { useSelectedStore } from '@/stores/selectedItems';
+import { ModulesItems } from '@/_mockApis/dataTable';
+import { onMounted } from 'vue';
 
 const selectedStore = useSelectedStore()
 const props = defineProps({ item: Object, level: Number });
 
 const handleClick = () => {
-    selectedStore.selectArtifact(props.item)
-    selectedStore.selectData = 'artifact'
+    selectedStore.selectModule(props.item)
+    selectedStore.selectData = 'module'
     console.log(selectedStore.selectData)
 }
+onMounted(() => {
+    console.log('Item selected', props.item)
+    console.log('ModulesItems', selectedStore.project.modules)
+});
 </script>
 
 <template>
@@ -17,7 +23,7 @@ const handleClick = () => {
     <v-list-item
         rounded
         class="mb-1"
-        :active="selectedStore.artifact?.url === item.to"
+        :active="selectedStore.selectData === 'module' && selectedStore.module === item.id"
         :disabled="item.disabled"
         :target="item.type === 'external' ? '_blank' : ''"
         v-scroll-to="{ el: '#top' }"

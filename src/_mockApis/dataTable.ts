@@ -103,7 +103,7 @@ const ArtifactItems = [
       ]
     }
   },
-  {
+  /* {
     project_id: "P-005",
     type: "Module Engineering",
     status: "In Progress",
@@ -115,7 +115,7 @@ const ArtifactItems = [
         { name: "UI Builder", domain: "Frontend", priority: "Medium", phase: "Phase 2" }
       ]
     }
-  },
+  }, */
   {
     project_id: "P-006",
     type: "System Architecture",

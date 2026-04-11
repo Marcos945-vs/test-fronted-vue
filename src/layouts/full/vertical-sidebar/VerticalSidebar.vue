@@ -6,8 +6,8 @@ import { sidebarArtifact, sidebarItem, sidebarModule } from './sidebarItem';
 import { ModulesItems } from '@/_mockApis/dataTable';
 
 import NavItem from './NavItem/index.vue';
-import NavItemSelectArtifact from './NavItem/select.vue';
-import NavItemSelectModule from './NavItem/select2.vue';
+import NavItemSelectArtifact from './NavItem/selectArtifact.vue';
+import NavItemSelectModule from './NavItem/selectModule.vue';
 import NavCollapse from './NavCollapse/NavCollapse.vue';
 import NavGroup from './NavGroup/index.vue';
 import { useAuthStore } from '@/stores/auth';

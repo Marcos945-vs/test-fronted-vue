@@ -6,16 +6,18 @@ import UiParentCard from '@/components/shared/UiParentCard.vue';
 import ArtifactContent from '@/components/ArtifactContent.vue';
 import ModuleContent from '@/components/ModuleContent.vue';
 import { useSelectedStore } from '@/stores/selectedItems';
+import { useAuthStore } from '@/stores/auth';
 import { ArtifactItems } from '@/_mockApis/dataTable';
 import axiosServices from '@/utils/axios';
 
 const selectedStore = useSelectedStore();
+const authStore = useAuthStore();
 const loading = ref(false);
 
 const page = ref({ title: 'Details Projects' });
 const breadcrumbs = ref([
     { text: 'Home', disabled: false, href: '/' },
-    { text: 'List Projects', disabled: false, href: '/TableProject' },
+    { text: 'Projects List', disabled: false, href: '/TableProject' },
     { text: 'Details Projects', disabled: true, href: '#' }
 ]);
 
@@ -97,7 +99,7 @@ watch(
                                     <h2 class="text-h6 pa-2 ma-2">
                                         This type of artifact is not assigned to {{ selectedStore.project?.name }}
                                     </h2>
-                                    <v-btn variant="outlined" class="pa-2 ma-2" @click="$router.push('/DetailsProject/FormArtifact')"
+                                    <v-btn v-if="authStore.user.abilities.includes('edit_artifact')" variant="outlined" class="pa-2 ma-2" @click="$router.push('/DetailsProject/FormArtifact')"
                                         >Create Artifact</v-btn
                                     >
                                 </div>

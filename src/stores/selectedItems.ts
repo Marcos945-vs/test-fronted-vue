@@ -26,20 +26,20 @@ export const useSelectedStore = defineStore('select', {
                 client: string;
                 created_by: string;
                 status: string;
-                modules: number[];
+                modules: [];
             } | null,
             artifact: (saved?.artifact ?? {
                 title: 'Strategic Alignment',
                 url: 'strategic_alignment',
                 content: null
             }) as any,
-            module: (saved?.module ?? null) as number | null,
+            module: (saved?.module ?? null) as any,
             msg: '' as string | null,
             selectData: (saved?.selectData ?? 'artifact') as string | null
         };
     },
     actions: {
-        selectProject(project: {id: number; name: string; client: string; created_by: string; status: string; modules?: number[] }) {
+        selectProject(project: {id: number; name: string; client: string; created_by: string; status: string; modules?: [] }) {
             this.project = {
                 ...project,
                 modules: project.modules ?? []

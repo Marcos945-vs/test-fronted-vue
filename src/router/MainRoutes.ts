@@ -50,8 +50,8 @@ const MainRoutes = {
             component: () => import('@/views/DetailsProject.vue'),
             beforeEnter: () => {
                 const selectedStore = useSelectedStore();
-                console.log('Selected project in route guard:', selectedStore.project);
-                console.log('Selected artifact in route guard:', selectedStore.artifact);
+                /* console.log('Selected project in route guard:', selectedStore.project);
+                console.log('Selected artifact in route guard:', selectedStore.artifact); */
                 if (!selectedStore.project) {
                 // redirige si no hay proyecto cargado
                 return '/TableProject';

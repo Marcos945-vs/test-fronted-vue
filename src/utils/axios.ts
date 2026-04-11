@@ -31,7 +31,7 @@ axiosServices.interceptors.response.use(
     
     (response) => response,
     (error) => {
-        if (error.response && error.response.status === 401) {
+        if (error.response && (error.response.status === 401)) {
             localStorage.removeItem('user');
             router.push('/auth/login');
         }
