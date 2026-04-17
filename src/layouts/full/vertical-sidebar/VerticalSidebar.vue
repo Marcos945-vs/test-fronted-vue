@@ -66,7 +66,7 @@ const selectedStore = useSelectedStore();
                     <NavGroup :item="{ header: selectedStore.project?.name }" v-if="item.header" :key="item.title" />
                     <NavItemSelectArtifact :level="1" :item="item" v-else class="leftPadding" />
                 </template>
-                <template v-if="route.fullPath.includes('DetailsProject')" v-for="(item, i) in sidebarModule">
+                <template v-if="route.fullPath.includes('DetailsProject')" v-for="(item, i) in Array.isArray(selectedStore.modules) ? selectedStore.modules : []">
                     <NavGroup :item="{ header: item.header }" v-if="item.header" />
                     <NavItemSelectModule :level="1" :item="item" v-else class="leftPadding" />
                 </template>

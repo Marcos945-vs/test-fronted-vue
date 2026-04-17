@@ -46,7 +46,7 @@ const MainRoutes = {
         },
         {
             name: 'DetailsProject',
-            path: '/DetailsProject/:projectName/:artifactName',
+            path: '/DetailsProject/:projectName/:name',
             component: () => import('@/views/DetailsProject.vue'),
             beforeEnter: () => {
                 const selectedStore = useSelectedStore();

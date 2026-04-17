@@ -1,5 +1,7 @@
 import { defineStore } from 'pinia';
+import { markRaw } from 'vue';
 import { router } from '@/router';
+import { CircleIcon } from 'vue-tabler-icons';
 
 const STORAGE_KEY = 'selectedStore';
 
@@ -10,6 +12,14 @@ function loadFromSession() {
     } catch {
         return null;
     }
+}
+
+function rehydrateModules(modules: any[]): any[] {
+    if (!Array.isArray(modules)) return [];
+    return modules.map((item) => {
+        if (item.header) return item;
+        return { ...item, icon: markRaw(CircleIcon) };
+    });
 }
 
 function saveToSession(state: object) {
@@ -33,7 +43,11 @@ export const useSelectedStore = defineStore('select', {
                 url: 'strategic_alignment',
                 content: null
             }) as any,
-            module: (saved?.module ?? null) as any,
+            modules: rehydrateModules(saved?.modules ?? []),
+            module: (saved?.module ?? {
+                id: '',
+                content: null
+            }) as any,
             msg: '' as string | null,
             selectData: (saved?.selectData ?? 'artifact') as string | null
         };
@@ -54,11 +68,22 @@ export const useSelectedStore = defineStore('select', {
             saveToSession(this.$state);
             router.push(`/DetailsProject/${this.project?.name}/${this.artifact.url}`);
         },
-        selectModule(module: number) {
-            this.module = module;
+        selectModule(module: { id: number, name: string }) {
+            this.module.id = module.id;
+            saveToSession(this.$state);
+            router.push(`/DetailsProject/${this.project?.name}/${module.name}`)
+        },
+        saveModules(modules: []) {
+            console.log('Saving modules:', modules);
+            this.modules = modules;
             saveToSession(this.$state);
         },
-        assignModuleToProject() {
+        clearModule() {
+            this.module = { id: '', content: null };
+            this.selectData = 'artifact';
+            saveToSession(this.$state);
+        },
+       /*  assignModuleToProject() {
             if (this.module && this.project && !this.project.modules.includes(this.module)) {
                 this.project.modules.push(this.module);
                 this.msg = `Module assigned to ${this.project?.name}`;
@@ -66,6 +91,6 @@ export const useSelectedStore = defineStore('select', {
             } else {
                 this.msg = 'There must be a project selected to assign this module';
             }
-        }
+        } */
     }
 });

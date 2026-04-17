@@ -57,7 +57,7 @@
 
                         <v-tooltip text="View Project Details">
                             <template v-slot:activator="{ props }">
-                                <v-btn v-bind="props" icon size="30" color="primary" @click="goToDetail(item)">
+                                <v-btn :loading="loading_details === item.id" v-bind="props" icon size="30" color="primary" @click="goToDetail(item)">
                                     <v-icon style="font-size: 15px">mdi-magnify</v-icon>
                                 </v-btn>
                             </template>
@@ -108,7 +108,7 @@
 <script setup>
 //TODO paginacion
 //TODO Falta filtrado
-import { onMounted, ref } from 'vue';
+import { onMounted, ref, markRaw } from 'vue';
 import BaseBreadcrumb from '@/components/shared/BaseBreadcrumb.vue';
 import UiParentCard from '@/components/shared/UiParentCard.vue';
 import { useRouter } from 'vue-router';
@@ -116,12 +116,15 @@ import { useSelectedStore } from '@/stores/selectedItems';
 import { useAuditEventsStore } from '@/stores/auditEvents';
 import { useAuthStore } from '@/stores/auth';
 import axiosServices from '@/utils/axios';
+import { CircleIcon } from 'vue-tabler-icons';
+
 
 const authStore = useAuthStore();
 
 const selectedStore = useSelectedStore();
 const router = useRouter();
 const loading = ref(true);
+const loading_details = ref(null);
 const updatingTable = ref(false);
 const updateErrors = ref(null);
 const ProjectHeaders = [
@@ -157,7 +160,23 @@ async function getProjects() {
     /* projects.value = response.data; */
     return response.data;
 }
-
+const getModules = async (projectId) => {
+    const response = await axiosServices
+        .get('/modules', {
+            params: {
+                project_id: projectId
+            }
+        })
+        .then((res) => {
+            //console.log('Modules fetched:', res.data);
+            return res.data;
+        })
+        .catch((err) => {
+            console.error('Error fetching modules:', err);
+            return [];
+        });
+    return response;
+};
 function openEditDialog(item) {
     selectedProject.value = { ...item };
     console.log('Selected project for editing:', selectedProject.value);
@@ -206,7 +225,16 @@ function deleteProject(item) {
         });
 }
 
-const goToDetail = (item) => {
+const goToDetail = async (item) => {
+    loading_details.value = item.id;
+    const modulesList = await getModules(item.id);
+    const sideModules = [
+        { header: 'Modules' },
+        ...(modulesList.map((m) => (m ? { module: { id: m.id, name: m.name }, icon: markRaw(CircleIcon) } : null)).filter(Boolean))
+    ];
+    console.log('Modules for sidebar:', sideModules);
+    selectedStore.saveModules(sideModules);
     selectedStore.selectProject(item);
+    loading_details.value = null;
 };
 </script>

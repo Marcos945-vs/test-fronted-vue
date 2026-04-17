@@ -41,24 +41,45 @@ const getArtifact = async () => {
         });
     return response;
 };
+const getModule = async (id) => {
+    const response = await axiosServices
+        .get(`/modules/${id}`)
+        /* .then((res) => {
+            console.log('Module fetched:', res.data);
+            return res.data[0];
+        }) */
+        .catch((err) => {
+            console.error('Error fetching module:', err);
+            return null;
+        });
+    console.log('Module response:', response.data);
+    return response.data;
+};
 onMounted(async () => {
-    loading.value = true
-    console.log('Project ', selectedStore.project);
+    loading.value = true;
+    //console.log('Project ', selectedStore.project);
     if (selectedStore.selectData === 'artifact') {
         selectedStore.artifact.content = await getArtifact();
         console.log('Selected artifact content:', selectedStore.artifact);
     }
-    loading.value = false
+    if (selectedStore.selectData === 'module') {
+        selectedStore.module.content = await getModule(selectedStore.module.id);
+        console.log('Selected module content:', selectedStore.module);
+    }
+    loading.value = false;
 });
 onUpdated(async () => {
     loading.value = true;
     if (selectedStore.selectData === 'artifact') {
         selectedStore.artifact.content = await getArtifact();
         console.log('Selected artifact content updated:', selectedStore.artifact);
+    } else if (selectedStore.selectData === 'module') {
+        selectedStore.module.content = await getModule(selectedStore.module.id);
+        console.log('Selected module content updated:', selectedStore.module);
     }
     loading.value = false;
 });
-watch(
+/* watch(
     selectedStore.artifact,
     (newVal) => {
         if (selectedStore.selectData === 'artifact') {
@@ -66,14 +87,14 @@ watch(
         }
     },
     { deep: true }
-);
+); */
 </script>
 
 <template>
     <BaseBreadcrumb :title="page.title" :breadcrumbs="breadcrumbs"></BaseBreadcrumb>
     <v-row>
         <v-col cols="12">
-            <UiParentCard  title="Details" card_vertical_padding="3">
+            <UiParentCard title="Details" card_vertical_padding="3">
                 <v-card-title class="d-flex justify-start align-center pt-0">
                     <h2 class="font-weight-bold">{{ project.name }}</h2>
                     <v-chip :color="project.status === 'completed' ? 'green' : 'blue'" text-color="white" size="small" class="ml-2">
@@ -99,11 +120,15 @@ watch(
                                     <h2 class="text-h6 pa-2 ma-2">
                                         This type of artifact is not assigned to {{ selectedStore.project?.name }}
                                     </h2>
-                                    <v-btn v-if="authStore.user.abilities.includes('edit_artifact')" variant="outlined" class="pa-2 ma-2" @click="$router.push('/DetailsProject/FormArtifact')"
+                                    <v-btn
+                                        v-if="authStore.user.user.roles[0].name == 'admin' ||authStore.user.abilities.includes('edit_artifact')"
+                                        variant="outlined"
+                                        class="pa-2 ma-2"
+                                        @click="$router.push('/DetailsProject/FormArtifact')"
                                         >Create Artifact</v-btn
                                     >
                                 </div>
-                                <ModuleContent v-else-if="selectedStore.selectData === 'module'" />
+                                <ModuleContent v-else-if="selectedStore.selectData === 'module' && selectedStore.module.content" />
                             </template>
                         </v-card>
                     </v-col>

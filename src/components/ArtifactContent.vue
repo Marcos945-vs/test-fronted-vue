@@ -27,7 +27,7 @@ const selectedArtifact = ref(selectedStore.artifact.content);
 const api_users = ref([]);
 
 const openDialog = async () => {
-    selectedArtifact.value = { ...selectedStore.artifact.content };
+    //selectedArtifact.value = { ...selectedStore.artifact.content };
     loading_users.value = true;
     api_users.value = await getUsers();
     loading_users.value = false;
@@ -169,12 +169,12 @@ const deleteMassiveModules = async (moduleIds = []) => {
             </v-card-text>
             <v-card-actions class="f-flex justify-end py-2">
                 <v-btn @click="$router.push('/TableProject')">Back</v-btn>
-                <v-btn :loading="loading_users" v-if="authStore.user.abilities.includes('edit_artifact')" @click="openDialog()">Update</v-btn>
-                <v-btn v-if="authStore.user.abilities.includes('edit_artifact')" @click="delete_dialog = true">Delete</v-btn>
+                <v-btn :loading="loading_users" v-if="authStore.user.user.roles[0].name == 'admin' || authStore.user.abilities.includes('edit_artifact')" @click="openDialog()">Update Artifact</v-btn>
+                <v-btn color="error" v-if="authStore.user.user.roles[0].name == 'admin' || authStore.user.abilities.includes('edit_artifact')" @click="delete_dialog = true">Delete Artifact</v-btn>
             </v-card-actions>
 
-            <!-- Dialog para upgradear el artifact -->
-            <v-dialog v-model="dialog" max-width="800">
+            <!-- Dialog to update the artifact -->
+            <v-dialog persistent v-model="dialog" max-width="800">
                 <v-card>
                     <v-card-title></v-card-title>
                     <v-card-text>

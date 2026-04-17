@@ -15,5 +15,8 @@ export const typeArtifact = [
     'System Architecture',
     'Phase Scope'
 ];
-export const statusModule = ['Draft', 'Validated', 'Ready for build'];
-export const urlModule = 'http://localhost:3000/api/projects/Modules';
+export const statusModule = [
+    { title: 'Draft', value: 'draft' },
+    { title: 'Validated', value: 'validated' },
+    { title: 'Ready for build', value: 'ready_for_build' }
+];

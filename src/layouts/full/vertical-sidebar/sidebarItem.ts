@@ -10,7 +10,7 @@ import type { FunctionalComponent } from 'vue';
 
 type TablerIconComponent = FunctionalComponent<any>;
 
-type SidebarModuleItem = { title: string; icon: TablerIconComponent } | { header: string };
+type SidebarModuleItem = { module: object; icon: TablerIconComponent } | { header: string };
 
 const modules = computed(() => {
     if (selectedStore.project) {
@@ -34,8 +34,8 @@ export const sidebarModule = computed<SidebarModuleItem[]>(() => {
     if (selectedStore.project) {
         let modulesList: SidebarModuleItem[] = [
             { header: 'Modules' },
-            ...(selectedStore.project.modules.map((m) => (m ? { title: m.name, icon: CircleIcon } : null)).filter(Boolean) as {
-                title: string;
+            ...(selectedStore.project.modules.map((m) => (m ? { module: m, icon: CircleIcon } : null)).filter(Boolean) as {
+                module: object;
                 icon: TablerIconComponent;
             }[])
         ];

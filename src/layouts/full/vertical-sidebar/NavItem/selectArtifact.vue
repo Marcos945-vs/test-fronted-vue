@@ -12,7 +12,7 @@ const handleClick = () => {
     console.log(selectedStore.selectData);
 };
 onMounted(() => {
-    console.log('Item selected', props.item);
+    /* console.log('Item selected', props.item); */
 });
 </script>
 
@@ -21,7 +21,7 @@ onMounted(() => {
     <v-list-item
         rounded
         class="mb-1"
-        :active="selectedStore.artifact?.url === item.to"
+        :active="selectedStore.selectData === 'artifact' && selectedStore.artifact?.url === item.to"
         :disabled="item.disabled"
         :target="item.type === 'external' ? '_blank' : ''"
         v-scroll-to="{ el: '#top' }"

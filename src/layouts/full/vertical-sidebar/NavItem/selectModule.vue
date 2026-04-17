@@ -2,19 +2,25 @@
 import Icon from '../Icon.vue';
 import { useSelectedStore } from '@/stores/selectedItems';
 import { ModulesItems } from '@/_mockApis/dataTable';
-import { onMounted } from 'vue';
+import { onBeforeMount, onMounted } from 'vue';
+import { useRouter } from 'vue-router';
 
-const selectedStore = useSelectedStore()
+const selectedStore = useSelectedStore();
+const router = useRouter();
 const props = defineProps({ item: Object, level: Number });
 
 const handleClick = () => {
-    selectedStore.selectModule(props.item)
-    selectedStore.selectData = 'module'
-    console.log(selectedStore.selectData)
-}
+    selectedStore.selectModule(props.item.module);
+    selectedStore.selectData = 'module';
+    /* console.log(selectedStore.selectData)
+    console.log('Prop Module', props.item) */
+};
 onMounted(() => {
-    console.log('Item selected', props.item)
-    console.log('ModulesItems', selectedStore.project.modules)
+    console.log('Item selected', props.item);
+    /* console.log('ModulesItems', selectedStore.project.modules) */
+});
+onBeforeMount(() => {
+    //console.log('Item selected', props.item);
 });
 </script>
 
@@ -23,7 +29,7 @@ onMounted(() => {
     <v-list-item
         rounded
         class="mb-1"
-        :active="selectedStore.selectData === 'module' && selectedStore.module === item.id"
+        :active="selectedStore.selectData === 'module' && selectedStore.module.id === item.module.id"
         :disabled="item.disabled"
         :target="item.type === 'external' ? '_blank' : ''"
         v-scroll-to="{ el: '#top' }"
@@ -31,9 +37,9 @@ onMounted(() => {
     >
         <!---If icon-->
         <template v-slot:prepend>
-            <Icon :item="item.icon"  :level="level" />
+            <Icon :item="item.icon" :level="level" />
         </template>
-        <v-list-item-title>{{ (item.title) }}</v-list-item-title>
+        <v-list-item-title>{{ item.module.name }}</v-list-item-title>
         <!---If Caption-->
         <v-list-item-subtitle v-if="item.subCaption" class="text-caption mt-n1 hide-menu">
             {{ item.subCaption }}

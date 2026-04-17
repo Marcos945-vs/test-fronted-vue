@@ -1,9 +1,10 @@
 <script setup>
-import { onMounted, ref } from 'vue';
+import { onMounted, ref, markRaw } from 'vue';
 import { useRouter } from 'vue-router';
 import { useSelectedStore } from '@/stores/selectedItems';
 import { useAuthStore } from '@/stores/auth';
 import axiosServices from '@/utils/axios';
+import { CircleIcon } from 'vue-tabler-icons';
 
 const props = defineProps({
     is_create: {
@@ -114,7 +115,7 @@ const initContentJson = async (typeName) => {
 
 const handleSubmit = async () => {
     const { valid } = await formRef.value.validate();
-    if (!valid) return;
+    if (!valid) return false;
     switch (type.value.title) {
         case 'Strategic Alignment':
             if (props.is_create) await createArtifact();
@@ -161,6 +162,13 @@ const handleSubmit = async () => {
                 const modules = await createModules(content_json.value.modules_overview);
                 console.log('Modules creados con IDs:', modules);
                 content_json.value.modules_overview = modules.modules.map((m) => Number(m.id)).filter((id) => !Number.isNaN(id));
+                const existingModuleItems = Array.isArray(selectedStore.modules) ? selectedStore.modules.filter((m) => !m.header) : [];
+                const newSidebarModules = [
+                    { header: 'Modules' },
+                    ...existingModuleItems,
+                    ...modules.modules.map((m) => ({ module: { id: m.id, name: m.name }, icon: markRaw(CircleIcon) }))
+                ];
+                selectedStore.saveModules(newSidebarModules);
                 await createArtifact();
             } else {
                 const modulesToUpdate = content_json.value.modules_overview.filter((m) => m.id);
@@ -179,6 +187,18 @@ const handleSubmit = async () => {
                     content_json.value.modules_overview.push(
                         ...createdModules.modules.map((m) => Number(m.id)).filter((id) => !Number.isNaN(id))
                     );
+                    const newEntries = createdModules.modules.map((m) => ({ module: { id: m.id, name: m.name }, icon: markRaw(CircleIcon) }));
+                    selectedStore.saveModules([...selectedStore.modules, ...newEntries]);
+                }
+
+                // Sync name changes for updated modules in the sidebar
+                if (modulesToUpdate.length > 0) {
+                    const updatedSidebarModules = selectedStore.modules.map((item) => {
+                        if (item.header) return item;
+                        const updated = modulesToUpdate.find((u) => u.id === item.module?.id);
+                        return updated ? { ...item, module: { ...item.module, name: updated.name } } : item;
+                    });
+                    selectedStore.saveModules(updatedSidebarModules);
                 }
 
                 console.log('Contenido JSON actualizado con IDs de modules:', content_json.value);
@@ -205,7 +225,7 @@ const handleSubmit = async () => {
             console.error('Tipo de artifact desconocido:', type.value.title);
     }
     if (props.is_create) router.back();
-    return;
+    return true;
 };
 const createArtifact = async () => {
     const response = await axiosServices
@@ -301,16 +321,6 @@ const updateMassiveDomains = async (domains = []) => {
     console.log('Domains actualizados:', updated_domains);
     return updated_domains;
 };
-const deleteModule = async (m, i) => {
-    loading_delete.value = i;
-    if (m.id) {
-        await axiosServices.delete('/modules/' + m.id).catch((err) => {
-            console.error('Error deleting module:', err);
-        });
-    }
-    content_json.value.modules_overview.splice(i, 1);
-    loading_delete.value = null;
-};
 const deleteMassiveDomains = async (domainIds = []) => {
     await axiosServices
         .delete('/domains/massive', {
@@ -322,6 +332,21 @@ const deleteMassiveDomains = async (domainIds = []) => {
         .catch((err) => {
             console.error('Error deleting domain:', err);
         });
+};
+const deleteModule = async (m, i) => {
+    loading_delete.value = i;
+    selectedStore.saveModules(selectedStore.modules.filter((mod) => !mod.module || mod.module.id !== m.id));
+    if (m.id) {
+        await axiosServices.delete('/modules/' + m.id).catch((err) => {
+            console.error('Error deleting module:', err);
+        });
+        if (selectedStore.module?.id === m.id) {
+            selectedStore.clearModule();
+            router.push(`/DetailsProject/${selectedStore.project?.name}/${selectedStore.artifact.url}`);
+        }
+    }
+    content_json.value.modules_overview.splice(i, 1);
+    loading_delete.value = null;
 };
 const createModules = async (modules = []) => {
     console.log('Contenido JSON para modules:', modules);

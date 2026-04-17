@@ -1,7 +1,6 @@
 <script setup>
-//TODO paginacion y filtrado
 //TODO Audit de Artifacts y Modules
-import { onMounted, ref } from 'vue';
+import { onMounted, ref, watch } from 'vue';
 import { useRoute } from 'vue-router';
 import BaseBreadcrumb from '@/components/shared/BaseBreadcrumb.vue';
 import UiParentCard from '@/components/shared/UiParentCard.vue';
@@ -12,7 +11,14 @@ import { formatDate } from '@/utils/helpers/dateFormat';
 
 const route = useRoute();
 
-const loading = ref(true);
+const paginate = ref({
+    page: 1,
+    itemsPerPage: 10,
+    totalItems: 0
+});
+
+const loading_table = ref(true);
+const loading_paginate = ref(false);
 const page = ref({ title: 'Audit Events' });
 const breadcrumbs = ref([
     {
@@ -29,57 +35,99 @@ const breadcrumbs = ref([
 
 const jsonDialog = ref(false);
 const selectedJson = ref({});
+
 const auditHeaders = ref([
     {
-        title: 'Actions',
+        title: 'Log',
         align: 'start',
-        key: 'actions'
+        key: 'log'
     },
     {
-        title: 'date',
+        title: 'Date',
         align: 'start',
         key: 'created_at'
+    },
+    {
+        title: 'Actions',
+        align: 'end',
+        key: 'actions'
     }
 ]);
 const audits = ref([]);
-/* const AuditEventHeaders = [
-    { title: 'Actor User ID', align: 'start', key: 'actor_user_id' },
-    { title: 'Entity Type', align: 'start', key: 'entity_type' },
-    { title: 'Entity ID', align: 'start', key: 'entity_id' },
-    { title: 'Action', align: 'start', key: 'action' },
-    {title: 'Json', align: 'center', key: 'content_json'},
-    { title: 'Created At', align: 'start', key: 'created_at' },
-] */
 
 const search = ref();
+const projects = ref([
+    {
+        name: 'All Projects',
+        id: null
+    }
+]);
+const selectedProject = ref(null);
 
 onMounted(async () => {
-    const auditData = await getAudit();
-    console.log('Audit Events fetched:', auditData);
-    audits.value = auditData;
-    loading.value = false;
+    audits.value = await getAudit(paginate.value.page, paginate.value.itemsPerPage);
+    //console.log('Audit Events fetched:', auditData);
+    projects.value.push(...(await getProjects()));
+    console.log('Projects fetched:', projects.value);
+    loading_table.value = false;
 });
 
-const getAudit = async () => {
+const getAudit = async (page, itemsPerPage, project = null) => {
     const response = await axiosServices
-        .get('/audit-trails')
+        .get('/audit-trails', {
+            params: {
+                page,
+                per_page: itemsPerPage,
+                project_id: project
+            }
+        })
         .then((res) => {
-            console.log('Raw audit events:', res.data);
-            res.data = res.data.map((item) => {
+            //console.log('Raw audit events:', res.data);
+            paginate.value.totalItems = res.data.total || 0;
+            res.data = res.data.data.map((item) => {
                 return {
                     ...item,
-                    after_json: item.after_json ? JSON.parse(item.after_json) : null,
-                    before_json: item.before_json ? JSON.parse(item.before_json) : null,
+                    /* after_json: item.after_json ? JSON.parse(item.after_json) : null,
+                    before_json: item.before_json ? JSON.parse(item.before_json) : null, */
                     created_at: item.created_at ? formatDate(item.created_at) : ''
                 };
             });
-            console.log('Parsed audit events:', res.data);
+            //console.log('Parsed audit events:', res.data);
             return res.data;
         })
         .catch((error) => {
             console.error('Error fetching audit events:', error);
         });
+    console.log('Audit events response:', response);
     return response;
+};
+const getProjects = async () => {
+    const response = await axiosServices
+        .get('/projects')
+        .then((res) => {
+            //console.log('Projects fetched:', res.data);
+            res = res.data;
+            return res;
+        })
+        .catch((error) => {
+            console.error('Error fetching projects:', error);
+        });
+    return response;
+};
+const onTableUpdate = async ({ page, itemsPerPage }) => {
+    //console.log('Table options updated:', options);
+    loading_paginate.value = true;
+    paginate.value.page = page;
+    paginate.value.itemsPerPage = itemsPerPage;
+    audits.value = await getAudit(paginate.value.page, paginate.value.itemsPerPage, selectedProject.value);
+    loading_paginate.value = false;
+};
+const onProjectSelected = async (projectId) => {
+    //console.log('Selected project ID:', projectId);
+    loading_paginate.value = true;
+    paginate.value.page = 1; // Reset to first page when changing project
+    audits.value = await getAudit(paginate.value.page, paginate.value.itemsPerPage, projectId);
+    loading_paginate.value = false;
 };
 const openDialog = (before_status, after_status) => {
     jsonDialog.value = true;
@@ -88,6 +136,13 @@ const openDialog = (before_status, after_status) => {
         after_status
     };
 };
+/* watch(
+    paginate,
+    (newValue) => {
+        console.log('Pagination changed:', newValue);
+    },
+    { deep: true }
+); */
 </script>
 
 <template>
@@ -95,9 +150,39 @@ const openDialog = (before_status, after_status) => {
     <v-row>
         <v-col cols="12">
             <UiParentCard title="Audits">
-                <v-skeleton-loader v-if="loading" type="table"></v-skeleton-loader>
-                <v-text-field v-if="!loading" v-model="search" append-inner-icon="mdi-magnify" label="Search" single-line hide-details class="mb-5" />
-                <v-data-table v-if="!loading" :headers="auditHeaders" :items="audits" class="elevation-1" :search="search" items-per-page="5">
+                <v-skeleton-loader v-if="loading_table" type="table"></v-skeleton-loader>
+                <!-- <v-text-field
+                    v-if="!loading_table"
+                    v-model="search"
+                    append-inner-icon="mdi-magnify"
+                    label="Search"
+                    single-line
+                    hide-details
+                    class="mb-5"
+                /> -->
+                <v-select
+                    v-if="!loading_table"
+                    v-model="selectedProject"
+                    :items="projects"
+                    item-title="name"
+                    item-value="id"
+                    label="Filter for Projects"
+                    dense
+                    outlined
+                    class="mb-5"
+                    @update:modelValue="onProjectSelected"
+                ></v-select>
+                <v-data-table-server
+                    v-model:items-per-page="paginate.itemsPerPage"
+                    v-if="!loading_table"
+                    :headers="auditHeaders"
+                    :items="audits"
+                    :items-length="paginate.totalItems"
+                    :loading="loading_paginate"
+                    :search="search"
+                    @update:options="onTableUpdate"
+                    class="elevation-1"
+                >
                     <!-- <template v-slot:item.content_json="{ item }">
                         <v-tooltip text="Inspect JSONs">
                             <template v-slot:activator="{ props }">
@@ -107,19 +192,39 @@ const openDialog = (before_status, after_status) => {
                             </template>
                         </v-tooltip>
                     </template> -->
-                    <template v-slot:item.actions="{ item }">
-                        <span v-if="item.action != 'deleted'" class="mx-2"
-                            >The user <strong>{{ item.actor.name }}</strong> with role <strong>{{ item.actor.roles[0].name }}</strong> has
-                            performed an <strong>{{ item.action }}</strong> on <strong>{{ item.entity_type }}</strong>{{ " " }} 
-                            <strong>{{ item.entity && item.entity.name ? item.entity.name : 'N/A' }}</strong
-                            >.</span
-                        >
-                        <span v-else class="mx-2"
-                            >The user <strong>{{ item.actor.name }}</strong> with role <strong>{{ item.actor.roles[0].name }}</strong> has
-                            performed an <strong>{{ item.action }}</strong> on <strong>{{ item.entity_type }}</strong>{{ " " }}
-                            <strong>{{ item.before_json && item.before_json.name ? item.before_json.name : 'N/A' }}</strong
-                            >.</span
-                        >
+                    <template v-slot:item.log="{ item }">
+                        <template v-if="item.entity_type == 'artifact'">
+                            <span v-if="item.action != 'deleted'" class="mx-2"
+                                >The user <strong>{{ item.actor.name }}</strong> with role
+                                <strong>{{ item.actor.roles[0].name }}</strong> has performed an <strong>{{ item.action }}</strong> on
+                                <strong>{{ item.entity_type }}</strong
+                                >{{ ' ' }} <strong>{{ item.after_json && item.after_json.type ? item.after_json.type : 'N/A' }}</strong
+                                >.</span
+                            >
+                            <span v-else class="mx-2"
+                                >The user <strong>{{ item.actor.name }}</strong> with role
+                                <strong>{{ item.actor.roles[0].name }}</strong> has performed an <strong>{{ item.action }}</strong> on
+                                <strong>{{ item.entity_type }}</strong
+                                >{{ ' ' }} <strong>{{ item.before_json && item.before_json.type ? item.before_json.type : 'N/A' }}</strong
+                                >.</span
+                            >
+                        </template>
+                        <template v-else>
+                            <span v-if="item.action != 'deleted'" class="mx-2"
+                                >The user <strong>{{ item.actor.name }}</strong> with role
+                                <strong>{{ item.actor.roles[0].name }}</strong> has performed an <strong>{{ item.action }}</strong> on
+                                <strong>{{ item.entity_type }}</strong
+                                >{{ ' ' }} <strong>{{ item.entity && item.entity.name ? item.entity.name : 'N/A' }}</strong
+                                >.</span
+                            >
+                            <span v-else class="mx-2"
+                                >The user <strong>{{ item.actor.name }}</strong> with role
+                                <strong>{{ item.actor.roles[0].name }}</strong> has performed an <strong>{{ item.action }}</strong> on
+                                <strong>{{ item.entity_type }}</strong
+                                >{{ ' ' }} <strong>{{ item.before_json && item.before_json.name ? item.before_json.name : 'N/A' }}</strong
+                                >.</span
+                            >
+                        </template>
                         <!-- <v-tooltip
                             :text="
                                 item.before_json && item.after_json
@@ -132,7 +237,12 @@ const openDialog = (before_status, after_status) => {
                             </template>
                         </v-tooltip> -->
                     </template>
-                </v-data-table>
+                    <template v-slot:item.actions="{ item }">
+                        <v-btn icon size="30" color="primary" @click="openDialog(item.before_json.status, item.after_json.status)">
+                            <v-icon style="font-size: 15px">mdi-magnify</v-icon>
+                        </v-btn>
+                    </template>
+                </v-data-table-server>
 
                 <v-dialog v-model="jsonDialog" max-width="600">
                     <v-card>
