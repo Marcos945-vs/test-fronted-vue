@@ -1,14 +1,21 @@
 <script setup>
-import { computed, ref } from 'vue';
+import { computed, onBeforeMount, onMounted, ref } from 'vue';
 import { useSelectedStore } from '@/stores/selectedItems';
 
+const props = defineProps({
+    treeData: Object
+});
 const selectedStore = useSelectedStore();
+onMounted(() => {
+    console.log('Tree data received in ArtifactsTreeView:', props.treeData);
+});
 const treeItems = computed(() => {
-    if (!selectedStore.artifact.content) return [];
-    const content = selectedStore.artifact.content.content_json;
+    if (!props.treeData.content) return [];
+    console.log('Computing tree items for artifact:', props.treeData.title);
+    const content = props.treeData.content.content_json;
     const items = [];
 
-    if (selectedStore.artifact.title === 'Strategic Alignment') {
+    if (props.treeData.title === 'Strategic Alignment') {
         if (content.transformation) {
             items.push({
                 id: 'transformation',
@@ -40,7 +47,7 @@ const treeItems = computed(() => {
                 children: content.out_of_scope.map((s, i) => ({ id: `scope-${i}`, title: s }))
             });
         }
-    } else if (selectedStore.artifact.title === 'Big Picture') {
+    } else if (props.treeData.title === 'Big Picture') {
         if (content.ecosystem_vision) {
             items.push({
                 id: 'ecosystem',
@@ -62,7 +69,7 @@ const treeItems = computed(() => {
                 children: content.impacted_domains.map((d, i) => ({ id: `impacted-${i}`, title: `${d.name} -> ${d.description}` }))
             });
         }
-    } else if (selectedStore.artifact.title === 'Domain Breakdown') {
+    } else if (props.treeData.title === 'Domain Breakdown') {
         if (content.domains) {
             content.domains.forEach((el) => {
                 items.push({
@@ -76,7 +83,7 @@ const treeItems = computed(() => {
                 });
             });
         }
-    } else if (selectedStore.artifact.title === 'Module Matrix') {
+    } else if (props.treeData.title === 'Module Matrix') {
         if (content.modules_overview) {
             content.modules_overview.forEach((el) => {
                 items.push({
@@ -90,7 +97,7 @@ const treeItems = computed(() => {
                 });
             });
         }
-    } else if (selectedStore.artifact.title === 'System Architecture') {
+    } else if (props.treeData.title === 'System Architecture') {
         if (content.auth_model) {
             items.push({
                 id: 'auth',
@@ -119,7 +126,7 @@ const treeItems = computed(() => {
                 children: [{ id: 'scalability-val', title: content.scalability_notes }]
             });
         }
-    } else if (selectedStore.artifact.title === 'Phase Scope') {
+    } else if (props.treeData.title === 'Phase Scope') {
         if (content.acceptance_criteria) {
             items.push({
                 id: 'acceptance',

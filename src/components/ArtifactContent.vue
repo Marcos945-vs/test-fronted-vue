@@ -5,7 +5,7 @@ import { useSelectedStore } from '@/stores/selectedItems';
 import { useAuthStore } from '@/stores/auth';
 import { typeArtifact, statusArtifact } from '@/enum/enum';
 import axiosServices from '@/utils/axios';
-import ArtifactsTreeView from './artifactsContents/artifactsTreeView.vue';
+import ArtifactsTreeView from './treeViews/artifactsTreeView.vue';
 import { useRouter } from 'vue-router';
 import FormArtifact from './form/FormArtifact.vue';
 
@@ -164,7 +164,7 @@ const deleteMassiveModules = async (moduleIds = []) => {
             <!-- Contenido dinámico -->
             <v-card-text class="pt-2 pb-0">
                 <div>
-                    <ArtifactsTreeView></ArtifactsTreeView>
+                    <ArtifactsTreeView :treeData="selectedStore.artifact"></ArtifactsTreeView>
                 </div>
             </v-card-text>
             <v-card-actions class="f-flex justify-end py-2">

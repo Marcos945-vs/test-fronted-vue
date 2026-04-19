@@ -1,9 +1,11 @@
 <script setup>
-//TODO Audit de Artifacts y Modules
 import { onMounted, ref, watch } from 'vue';
 import { useRoute } from 'vue-router';
 import BaseBreadcrumb from '@/components/shared/BaseBreadcrumb.vue';
 import UiParentCard from '@/components/shared/UiParentCard.vue';
+import artifactsTreeView from '@/components/treeViews/artifactsTreeView.vue';
+import modulesTreeView from '@/components/treeViews/modulesTreeView.vue';
+import auditTreeView from '@/components/treeViews/auditTreeView.vue';
 
 import { AuditEvents, AuditEventHeaders } from '@/_mockApis/dataTable';
 import axiosServices from '@/utils/axios';
@@ -34,7 +36,7 @@ const breadcrumbs = ref([
 ]);
 
 const jsonDialog = ref(false);
-const selectedJson = ref({});
+const selectedItem = ref(null);
 
 const auditHeaders = ref([
     {
@@ -129,12 +131,10 @@ const onProjectSelected = async (projectId) => {
     audits.value = await getAudit(paginate.value.page, paginate.value.itemsPerPage, projectId);
     loading_paginate.value = false;
 };
-const openDialog = (before_status, after_status) => {
+const openDialog = (item) => {
+    console.log('Open dialog with selected item:', item);
+    selectedItem.value = item;
     jsonDialog.value = true;
-    selectedJson.value = {
-        before_status,
-        after_status
-    };
 };
 /* watch(
     paginate,
@@ -238,22 +238,17 @@ const openDialog = (before_status, after_status) => {
                         </v-tooltip> -->
                     </template>
                     <template v-slot:item.actions="{ item }">
-                        <v-btn icon size="30" color="primary" @click="openDialog(item.before_json.status, item.after_json.status)">
+                        <v-btn icon size="30" color="primary" @click="openDialog(item)">
                             <v-icon style="font-size: 15px">mdi-magnify</v-icon>
                         </v-btn>
                     </template>
                 </v-data-table-server>
 
-                <v-dialog v-model="jsonDialog" max-width="600">
+                <v-dialog v-model="jsonDialog" >
                     <v-card>
-                        <v-card-title>Content JSON</v-card-title>
+                        <v-card-title class="d-flex justify-center"><span>{{ selectedItem?.entity_type }} Details</span></v-card-title>
                         <v-card-text>
-                            <p>
-                                Before Status: <strong>{{ selectedJson.before_status }} </strong>
-                            </p>
-                            <p>
-                                After Status: <strong>{{ selectedJson.after_status }}</strong>
-                            </p>
+                            <auditTreeView v-if="selectedItem" :treeData="selectedItem" />
                         </v-card-text>
                         <v-card-actions>
                             <v-btn @click="jsonDialog = false">Close</v-btn>

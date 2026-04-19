@@ -7,13 +7,13 @@ export const statusArtifact = [
     { title: 'Done', value: 'done' }
 ];
 export const typeArtifact = [
-    'Strategic alignment',
-    'Big picture',
-    'Domain breakdown',
-    'Module Matrix',
-    'Module Engineering',
-    'System Architecture',
-    'Phase Scope'
+    { title: 'Strategic Alignment', value: 'strategic_alignment' },
+    { title: 'Big Picture', value: 'big_picture' },
+    { title: 'Domain Breakdown', value: 'domain_breakdown' },
+    { title: 'Module Matrix', value: 'module_matrix' },
+    { title: 'Module Engineering', value: 'module_engineering' },
+    { title: 'System Architecture', value: 'system_architecture' },
+    { title: 'Phase Scope', value: 'phase_scope' }
 ];
 export const statusModule = [
     { title: 'Draft', value: 'draft' },
