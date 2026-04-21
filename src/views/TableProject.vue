@@ -38,7 +38,10 @@
                     </template>
                     <!-- Columna de acciones -->
                     <template v-slot:item.actions="{ item }">
-                        <v-tooltip v-if="authStore.user.user.roles[0].name == 'admin' || authStore.user.abilities.includes('edit_projects')" text="Edit Project">
+                        <v-tooltip
+                            v-if="authStore.user.user.roles[0].name == 'admin' || authStore.user.abilities.includes('edit_projects')"
+                            text="Edit Project"
+                        >
                             <!-- v-if="authStore.user.user.roles[0].name == 'admin' || authStore.user.user.abilities.includes('edit_projects')" -->
                             <template v-slot:activator="{ props }">
                                 <v-btn v-bind="props" icon size="30" color="success" class="mr-1" @click="openEditDialog(item)">
@@ -49,7 +52,7 @@
 
                         <v-tooltip v-if="authStore.user.user.roles[0].name == 'admin'" text="Delete Project">
                             <template v-slot:activator="{ props }">
-                                <v-btn v-bind="props" icon size="30" color="error" class="mr-1" @click="deleteProject(item)">
+                                <v-btn v-bind="props" icon size="30" color="error" class="mr-1" @click="deleteDialog(item)">
                                     <v-icon style="font-size: 15px">mdi-delete</v-icon>
                                 </v-btn>
                             </template>
@@ -57,7 +60,14 @@
 
                         <v-tooltip text="View Project Details">
                             <template v-slot:activator="{ props }">
-                                <v-btn :loading="loading_details === item.id" v-bind="props" icon size="30" color="primary" @click="goToDetail(item)">
+                                <v-btn
+                                    :loading="loading_details === item.id"
+                                    v-bind="props"
+                                    icon
+                                    size="30"
+                                    color="primary"
+                                    @click="goToDetail(item)"
+                                >
                                     <v-icon style="font-size: 15px">mdi-magnify</v-icon>
                                 </v-btn>
                             </template>
@@ -103,11 +113,26 @@
             </UiParentCard>
         </v-col>
     </v-row>
+    <v-dialog v-model="delete_dialog" max-width="400">
+        <v-card>
+            <v-card-title class="text-h6">Confirm deletion</v-card-title>
+            <v-card-text>
+                Are you sure you want to delete the project
+                <strong>{{ selectedProject.name }}</strong
+                >? This action cannot be undone.
+            </v-card-text>
+            <v-card-actions class="d-flex justify-end">
+                <v-btn variant="text" @click="delete_dialog = false">Cancel</v-btn>
+                <v-btn color="error" variant="outlined" @click="deleteProject(selectedProject)">Delete</v-btn>
+            </v-card-actions>
+        </v-card>
+    </v-dialog>
 </template>
 
 <script setup>
 //TODO paginacion
 //TODO Falta filtrado
+//TODO Dialog para confirmar delete
 import { onMounted, ref, markRaw } from 'vue';
 import BaseBreadcrumb from '@/components/shared/BaseBreadcrumb.vue';
 import UiParentCard from '@/components/shared/UiParentCard.vue';
@@ -117,7 +142,6 @@ import { useAuditEventsStore } from '@/stores/auditEvents';
 import { useAuthStore } from '@/stores/auth';
 import axiosServices from '@/utils/axios';
 import { CircleIcon } from 'vue-tabler-icons';
-
 
 const authStore = useAuthStore();
 
@@ -146,6 +170,7 @@ const search = ref('');
 const projects = ref([]);
 
 const editDialog = ref(false);
+const delete_dialog = ref(false);
 const selectedProject = ref({});
 
 onMounted(async () => {
@@ -154,6 +179,11 @@ onMounted(async () => {
     loading.value = false;
 });
 // Funciones
+const deleteDialog = async (project) => {
+    console.log('Project selected for deletion:', project);
+    selectedProject.value = project;
+    delete_dialog.value = true;
+};
 async function getProjects() {
     const response = await axiosServices.get('/projects');
     /* console.log('Projects fetched:', response.data); */
@@ -213,6 +243,7 @@ async function saveEdit() {
 
 function deleteProject(item) {
     updatingTable.value = true;
+    delete_dialog.value = false;
     axiosServices
         .delete(`/projects/${item.id}`)
         .then(async (response) => {
@@ -230,7 +261,7 @@ const goToDetail = async (item) => {
     const modulesList = await getModules(item.id);
     const sideModules = [
         { header: 'Modules' },
-        ...(modulesList.map((m) => (m ? { module: { id: m.id, name: m.name }, icon: markRaw(CircleIcon) } : null)).filter(Boolean))
+        ...modulesList.map((m) => (m ? { module: { id: m.id, name: m.name }, icon: markRaw(CircleIcon) } : null)).filter(Boolean)
     ];
     console.log('Modules for sidebar:', sideModules);
     selectedStore.saveModules(sideModules);

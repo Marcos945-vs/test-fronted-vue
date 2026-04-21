@@ -38,7 +38,7 @@ const selectedStore = useSelectedStore();
         <!---Navigation -->
         <!-- ---------------------------------------------- -->
         <perfect-scrollbar class="scrollnavbar" style="height: 100%">
-            <v-sheet rounded="md" width="360" elevation="10" class="pb-0" style="height: 64px;">
+            <v-sheet rounded="md" width="360" elevation="10" class="pb-0" style="height: 64px">
                 <div class="px-4 pt-1 pb-0">
                     <div class="d-flex align-center mt-2 pb-0">
                         <v-avatar size="40">
@@ -46,7 +46,9 @@ const selectedStore = useSelectedStore();
                         </v-avatar>
                         <div class="ml-2 d-flex flex-column" v-if="!customizer.mini_sidebar">
                             <strong>{{ authStore.user.user.name || 'Unknown' }}</strong>
-                            <span class="text-subtitle-1 font-weight-regular textSecondary">{{ authStore.user.user.roles[0].name || 'Unknown' }}</span>
+                            <span class="text-subtitle-1 font-weight-regular textSecondary">{{
+                                authStore.user.user.roles[0].name || 'Unknown'
+                            }}</span>
                         </div>
                     </div>
                 </div>
@@ -54,11 +56,13 @@ const selectedStore = useSelectedStore();
             <v-list class="py-4 pa-6">
                 <!---Menu Loop -->
                 <template v-for="(item, i) in sidebarMenu">
-                    <!---Item Sub Header -->
-                    <NavGroup :item="item" v-if="item.header" :key="item.title" />
-                    <!---If Has Child -->
-                    <NavCollapse class="leftPadding" :item="item" :level="0" v-else-if="item.children" />
-                    <NavItem :item="item" v-else class="leftPadding" />
+                    <template v-if="item.beforeEnter ? item.beforeEnter() === true : true">
+                        <!---Item Sub Header -->
+                        <NavGroup :item="item" v-if="item.header" :key="item.title" />
+                        <!---If Has Child -->
+                        <NavCollapse class="leftPadding" :item="item" :level="0" v-else-if="item.children"/>
+                        <NavItem :item="item" v-else class="leftPadding" />
+                    </template>
                 </template>
             </v-list>
             <v-list class="py-4 pa-6">
@@ -66,7 +70,10 @@ const selectedStore = useSelectedStore();
                     <NavGroup :item="{ header: selectedStore.project?.name }" v-if="item.header" :key="item.title" />
                     <NavItemSelectArtifact :level="1" :item="item" v-else class="leftPadding" />
                 </template>
-                <template v-if="route.fullPath.includes('DetailsProject')" v-for="(item, i) in Array.isArray(selectedStore.modules) ? selectedStore.modules : []">
+                <template
+                    v-if="route.fullPath.includes('DetailsProject')"
+                    v-for="(item, i) in Array.isArray(selectedStore.modules) ? selectedStore.modules : []"
+                >
                     <NavGroup :item="{ header: item.header }" v-if="item.header" />
                     <NavItemSelectModule :level="1" :item="item" v-else class="leftPadding" />
                 </template>

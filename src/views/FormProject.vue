@@ -5,7 +5,7 @@ import BaseBreadcrumb from '@/components/shared/BaseBreadcrumb.vue';
 import UiParentCard from '@/components/shared/UiParentCard.vue';
 import FormCompProject from '@/components/form/FormCompProject.vue';
 
-const page = ref({ title: 'Sample Page' });
+const page = ref({ title: 'Project Form' });
 const breadcrumbs = ref([
     {
         text: 'Dashboard',

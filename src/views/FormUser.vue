@@ -1,11 +1,13 @@
-<script setup lang="ts">
+<script setup>
 import { ref } from 'vue';
-
 import BaseBreadcrumb from '@/components/shared/BaseBreadcrumb.vue';
 import UiParentCard from '@/components/shared/UiParentCard.vue';
-import FormCompModule from '@/components/form/FormCompModule.vue';
+import FormUser from '@/components/form/FormUser.vue';
+import { useRouter } from 'vue-router';
 
-const page = ref({ title: 'Module Form' });
+const router = useRouter();
+
+const page = ref({ title: 'User Form' });
 const breadcrumbs = ref([
     {
         text: 'Dashboard',
@@ -13,28 +15,27 @@ const breadcrumbs = ref([
         href: '/'
     },
     {
-        text: 'New Project',
+        text: 'Users List',
         disabled: false,
-        href: '/FormProject'
+        href: '/TableUsers'
     },
     {
-        text: 'New Module',
+        text: 'New User',
         disabled: true,
         href: '#'
     }
 ]);
-</script>
 
+</script>
 <template>
     <BaseBreadcrumb :title="page.title" :breadcrumbs="breadcrumbs"></BaseBreadcrumb>
     <v-row>
         <v-col cols="12" md="12">
-            <UiParentCard title="Module">
+            <UiParentCard title="User">
                 <v-col>
-                    <FormCompModule />
-                </v-col>    
+                   <FormUser />
+                </v-col>
             </UiParentCard>
         </v-col>
-        
     </v-row>
 </template>

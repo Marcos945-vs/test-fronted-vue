@@ -2,6 +2,7 @@ import { MenuIcon, CircleIcon, CircleOffIcon, BrandChromeIcon, MoodSmileIcon, St
 
 import { useSelectedStore } from '@/stores/selectedItems';
 import { ModulesItems } from '@/_mockApis/dataTable';
+import { hasAccess } from '@/utils/helpers/hasAccess';
 import { computed } from 'vue';
 
 const selectedStore = useSelectedStore();
@@ -66,9 +67,18 @@ export const sidebarItem = [
     {
         title: 'Projects List',
         icon: CircleIcon,
-        to: '/TableProject'
+        to: '/'
     },
     {
+        title: 'Users List',
+        icon: CircleIcon,
+        to: '/TableUsers',
+        beforeEnter: () => {
+            if (!hasAccess('edit_users')) return '/';
+            return true;
+        }
+    }
+    /* {
         title: 'Modules List',
         icon: CircleIcon,
         to: '/TableModule'
@@ -89,7 +99,7 @@ export const sidebarItem = [
                 to: '/FormArtifact'
             }
         ]
-    }
+    } */
 ];
 
 export const sidebarArtifact = [

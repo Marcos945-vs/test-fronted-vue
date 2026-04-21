@@ -13,32 +13,30 @@ const status = ref('');
 const created_by = ref('');
 const description = ref('');
 
-const requiredRule = (v) => !!v || 'Este campo es obligatorio';
-const minLengthRule = (min) => (v) => (v && v.length >= min) || `Debe tener al menos ${min} caracteres`;
-const onlyLettersRule = (v) => /^[A-Za-z\s]+$/.test(v) || 'Solo se permiten letras';
+const requiredRule = (v) => !!v || 'This field is required';
+const minLengthRule = (min) => (v) => (v && v.length >= min) || `Must be at least ${min} characters`;
+const onlyLettersRule = (v) => /^[A-Za-z\s]+$/.test(v) || 'Letters only allowed';
 
 const formRef = ref(null);
 
 const handleSubmit = async () => {
     const isValid = formRef.value.isValid;
     if (!isValid) {
-        console.log('Formulario inválido');
+        console.log('Invalid form');
     } else {
-        try { 
-        const response = await axiosServices.post('/projects', 
-        { 
-            name: name.value, 
-            client_name: client_name.value, 
-            description: description.value
-        }) 
-        console.log('Proyecto creado:', response.data) 
-        router.push('/TableProject')
-    } catch (error) 
-    { 
-        console.error('Error al crear proyecto:', error.response?.data || error.message) 
-    }
-        console.log('Proyecto creado');
-        router.back();
+        try {
+            const response = await axiosServices.post('/projects', {
+                name: name.value,
+                client_name: client_name.value,
+                description: description.value
+            });
+            console.log('Project created:', response.data);
+            router.push('/TableProject');
+        } catch (error) {
+            console.error('Error creating project:', error.response?.data || error.message);
+        }
+        /* console.log('Project created');
+        router.back(); */
     }
 };
 </script>
@@ -48,21 +46,11 @@ const handleSubmit = async () => {
         <v-row>
             <v-col cols="12">
                 <v-label class="font-weight-medium mb-2">Project Name</v-label>
-                <VTextField
-                    type="text"
-                    placeholder="John Deo"
-                    v-model="name"
-                    :rules="[requiredRule, minLengthRule(3)]"
-                ></VTextField>
+                <VTextField type="text" placeholder="John Deo" v-model="name" :rules="[requiredRule, minLengthRule(3)]"></VTextField>
             </v-col>
             <v-col cols="12">
                 <v-label class="font-weight-medium mb-2">Client Name</v-label>
-                <VTextField
-                    type="text"
-                    placeholder="Jane Deo"
-                    v-model="client_name"
-                    :rules="[requiredRule, onlyLettersRule]"
-                ></VTextField>
+                <VTextField type="text" placeholder="Jane Deo" v-model="client_name" :rules="[requiredRule, onlyLettersRule]"></VTextField>
             </v-col>
             <!-- <v-col cols="12">
                 <v-label class="font-weight-medium mb-2">Status</v-label>
@@ -70,7 +58,14 @@ const handleSubmit = async () => {
             </v-col> -->
             <v-col cols="12">
                 <v-label class="font-weight-medium mb-2">Project Description</v-label>
-                <v-textarea placeholder="Project Description" row-height="25" rows="3" variant="outlined" auto-grow v-model="description"></v-textarea>
+                <v-textarea
+                    placeholder="Project Description"
+                    row-height="25"
+                    rows="3"
+                    variant="outlined"
+                    auto-grow
+                    v-model="description"
+                ></v-textarea>
             </v-col>
             <v-card-actions class="flex-grow-1">
                 <v-row>

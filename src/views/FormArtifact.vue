@@ -11,7 +11,7 @@ import { useRouter } from 'vue-router';
 const form_artifact = ref(null);
 const router = useRouter();
 const selectedStore = useSelectedStore();
-const page = ref({ title: 'Sample Page' });
+const page = ref({ title: 'Artifact Form' });
 const breadcrumbs = ref([
     {
         text: 'Dashboard',

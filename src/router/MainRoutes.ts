@@ -1,4 +1,5 @@
 import { useSelectedStore } from '@/stores/selectedItems';
+import { hasAccess } from '@/utils/helpers/hasAccess';
 import { ComponentsIcon } from 'vue-tabler-icons';
 
 const MainRoutes = {
@@ -9,33 +10,63 @@ const MainRoutes = {
     redirect: '/main',
     component: () => import('@/layouts/full/FullLayout.vue'),
     children: [
-        {
+        /* {
             name: 'Starter',
             path: '/',
             component: () => import('@/views/StarterPage.vue')
-        },
+        }, */
         {
             name: 'FormProject',
             path: '/FormProject',
-            component: () => import('@/views/FormProject.vue')
+            component: () => import('@/views/FormProject.vue'),
+            beforeEnter: () => {
+                if (!hasAccess('edit_projects')) return '/';
+                return true;
+            }
+        },
+        {
+            name: 'FormUser',
+            path: '/FormUser',
+            component: () => import('@/views/FormUser.vue'),
+            beforeEnter: () => {
+                if (!hasAccess('edit_users')) return '/';
+                return true;
+            }
         },
         {
             name: 'FormArtifact',
             path: '/DetailsProject/FormArtifact',
-            component: () => import('@/views/FormArtifact.vue')
+            component: () => import('@/views/FormArtifact.vue'),
+            beforeEnter: () => {
+                if (!hasAccess('edit_artifact')) return '/';
+                return true;
+            }
         },
         {
             name: 'FormModule',
             path: '/FormModule',
-            component: () => import('@/views/FormModule.vue')
+            component: () => import('@/views/FormModule.vue'),
+            beforeEnter: () => {
+                if (!hasAccess('edit_modules')) return '/';
+                return true;
+            }
         },
         {
             name: 'TableProject',
-            path: '/TableProject',
-            component: () => import('@/views/TableProject.vue')
+            path: '/',
+            component: () => import('@/views/TableProject.vue'),
         },
         {
-            name: 'TablerAtifact',
+            name: 'TableUsers',
+            path: '/TableUsers',
+            component: () => import('@/views/TableUsers.vue'),
+            beforeEnter: () => {
+                if (!hasAccess('edit_users')) return '/';
+                return true;
+            }
+        },
+        {
+            name: 'TableArtifact',
             path: '/TableArtifact',
             component: () => import('@/views/TableArtifact.vue')
         },

@@ -5,6 +5,7 @@ import { ActivityIcon, Menu2Icon } from 'vue-tabler-icons';
 import ProfileDD from './ProfileDD.vue';
 import RightMobileSidebar from './RightMobileSidebar.vue';
 import ThemeToggler from './ThemeToggler.vue';
+import { hasAccess } from '@/utils/helpers/hasAccess';
 import { AuditEvents } from '@/_mockApis/dataTable';
 
 const customizer = useCustomizerStore();
@@ -40,16 +41,16 @@ watch(priority, (newPriority) => {
             </template>
         </v-tooltip>
         
-        <v-tooltip text="Audit Events">
+        <v-tooltip text="Audit Events" v-if="hasAccess('view_audit')">
             <template v-slot:activator="{ props }">
                 <div v-bind="props" class="ms-2">
                     <v-btn icon variant="text" color="primary" class="custom-hover-primary" to="/Audit" size="small">
-                        <v-badge v-if="AuditEvents.length > 0" color="secondary" :content="AuditEvents.length" offset-x="-4" offset-y="-3">
+                        <!-- <v-badge v-if="AuditEvents.length > 0" color="secondary" :content="AuditEvents.length" offset-x="-4" offset-y="-3">
                             <ActivityIcon stroke-width="1.5" size="22" />
-                        </v-badge>
+                        </v-badge> -->
 
                         <!-- Cuando no hay eventos, se muestra solo el icono -->
-                        <ActivityIcon v-else stroke-width="1.5" size="22" />
+                        <ActivityIcon stroke-width="1.5" size="22" />
                     </v-btn>
                 </div>
             </template>
