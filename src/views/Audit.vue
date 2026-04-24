@@ -214,7 +214,7 @@ const openDialog = (item) => {
                                 >The user <strong>{{ item.actor.name }}</strong> with role
                                 <strong>{{ item.actor.roles[0].name }}</strong> has performed an <strong>{{ item.action }}</strong> on
                                 <strong>{{ item.entity_type }}</strong
-                                >{{ ' ' }} <strong>{{ item.entity && item.entity.name ? item.entity.name : 'N/A' }}</strong
+                                >{{ ' ' }} <strong>{{ item.after_json && item.after_json.name ? item.after_json.name : 'N/A' }}</strong
                                 >.</span
                             >
                             <span v-else class="mx-2"

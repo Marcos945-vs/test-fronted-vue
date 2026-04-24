@@ -35,7 +35,7 @@ const artifactTreeData = computed(() => ({
                 v-else-if="props.treeData.before_json && props.treeData.entity_type === 'project'"
                 :treeData="props.treeData.before_json" />
         </v-col>
-        <v-col class="d-flex justify-center flex-column" cols="6">
+        <v-col class="d-flex justify-center" cols="6">
             <h3 class="text-h6 font-weight-bold">After</h3>
             <artifactsTreeView
                 v-if="props.treeData.after_json && props.treeData.entity_type === 'artifact'"
